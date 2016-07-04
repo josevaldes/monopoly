@@ -2,6 +2,9 @@
 #define HELPING_METHODS_H
 
 #include <string>
+#include "clrscreen_linux.h"
+//#include "clrscreen.h" for Windows
+
 using namespace std;
 
 //Helping methods
@@ -18,4 +21,6 @@ void ClearScreen();
 
 void Custom_Clear();
 
-#endif HELPING_METHODS_H
+void toUpperString(string& str);
+
+#endif //HELPING_METHODS_H

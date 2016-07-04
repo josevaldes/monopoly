@@ -113,4 +113,4 @@ class color
 		bool operator!=(const color &); // Custom != operator
 
 };
-#endif COLOR_H
+#endif //COLOR_H

@@ -1,6 +1,7 @@
 #include <string>
 #include "helping_methods.h"
 #include "LinkedUser.h"
+#include "Interfaces_Menu.h"
 
 using namespace std;
 

@@ -25,8 +25,8 @@ void buyPropertyToBank(user & buyer, property_database & DB)
 	case 1:
 		cout << "Type the color of the property that you are going to buy" << endl;
 		getline(cin, colorName);
-		transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
-
+		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
+                toUpperString(colorName);
 		colorSelected = DB.getColorProperty(colorName);
 		
 		if (colorSelected.getName() == "")
@@ -89,8 +89,8 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 	case 1:
 		cout << "Select the color of the property you want to buy" << endl;
 		getline(cin, colorName);
-		transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
-
+		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
+                toUpperString(colorName);
 		colorSelected = seller.getColorProperty(colorName);
 		
 		if (colorSelected.getName() == "")
@@ -255,8 +255,8 @@ void mortageProperty(user & client)
 	case 1:
 		cout << "Select the color of the property you want to mortage or free mortage" << endl;
 		getline(cin, colorName);
-		transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
-
+		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
+                toUpperString(colorName);
 		colorSelected = client.getColorProperty(colorName);
 
 		if (colorSelected.getName() == "")
@@ -388,8 +388,8 @@ void buySellHouses(user & client)
 		
 		cout << "In which color you want to invest" << endl;
 		getline(cin, colorName);
-		transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
-		
+		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
+		toUpperString(colorName);
 		vector<color> proposed = client.getColorProperties(colorName);
 
 		if (proposed.size() <= 2)
@@ -469,8 +469,8 @@ void buySellHouses(user & client)
 		do{
 			cout << "Select the color of the properties in which you want to sell" << endl;
 			getline(cin, colorName);
-			transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
-
+			//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
+                        toUpperString(colorName);
 			color selected = client.getColorProperty(colorName);
 			
 			if (selected.getName() == "")
@@ -532,8 +532,8 @@ void payRent(user & rentee, user & renter)
 		cout << "Write the color of the property" << endl;
 		
 		getline(cin, colorName);
-		transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
-
+		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
+                toUpperString(colorName);
 		colorSelected = renter.getColorProperty(colorName);
 
 		if (colorSelected.getName() == "")

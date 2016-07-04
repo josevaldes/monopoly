@@ -128,4 +128,4 @@ public:
 		return name != rhs.getName();
 	}
 };
-#endif UTILITY_H
+#endif //UTILITY_H

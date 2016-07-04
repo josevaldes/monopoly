@@ -28,4 +28,4 @@ class property_database
 		void returnUtilityProperty(utility);
 };
 
-#endif PROPERTY_DATABASE_H
+#endif //PROPERTY_DATABASE_H

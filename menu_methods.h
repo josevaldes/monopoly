@@ -15,4 +15,4 @@ void bankCharge(user &);
 LinkedUser* opening();
 void returnAllProperties(user &, property_database &);
 
-#endif MENU_METHODS_H
+#endif //MENU_METHODS_H

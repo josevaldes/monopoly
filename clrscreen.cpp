@@ -3,24 +3,40 @@
 #ifdef WIN32
 void clrscreen()
 {
-	DWORD n;                         /* Number of characters written */
-	COORD coord = { 0 };               /* Top left screen position */
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
+   HANDLE                     hStdOut;
+   CONSOLE_SCREEN_BUFFER_INFO csbi;
+   DWORD                      count;
+   DWORD                      cellCount;
+   COORD                      homeCoords = { 0, 0 };
 
-	/* Get a handle to the console */
-	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+   hStdOut = GetStdHandle( STD_OUTPUT_HANDLE );
+   if (hStdOut == INVALID_HANDLE_VALUE) return;
 
-	GetConsoleScreenBufferInfo(h, &csbi);
 
-	/* Find the number of characters to overwrite */
-	DWORD size = csbi.dwSize.X * csbi.dwSize.Y;
+   /* Get the number of cells in the current buffer */
+   if (!GetConsoleScreenBufferInfo( hStdOut, &csbi )) return;
+   cellCount = csbi.dwSize.X *csbi.dwSize.Y;
 
-	/* Overwrite the screen buffer with whitespace */
-	FillConsoleOutputCharacter(h, TEXT(' '), size, coord, &n);
-	GetConsoleScreenBufferInfo(h, &csbi);
-	FillConsoleOutputAttribute(h, csbi.wAttributes, size, coord, &n);
+/* Fill the entire buffer with spaces */
+if (!FillConsoleOutputCharacter(
+    hStdOut,
+    (TCHAR) ' ',
+    cellCount,
+    homeCoords,
+    &count
+    )) return;
 
-	/* Reset the cursor to the top left position */
-	SetConsoleCursorPosition(h, coord);
+/* Fill the entire buffer with the current colors and attributes */
+   if (!FillConsoleOutputAttribute(
+       hStdOut,
+       csbi.wAttributes,
+       cellCount,
+       homeCoords,
+       &count
+       )) return;
+
+    /* Move the cursor home */
+     SetConsoleCursorPosition( hStdOut, homeCoords );
 }
+
 #endif
