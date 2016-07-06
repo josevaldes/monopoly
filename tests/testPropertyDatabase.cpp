@@ -1,7 +1,9 @@
-/*
+
 #include <iostream>
 #include <string>
 #include "color.h"
+#include "railroad.h"
+#include "utility.h"
 #include "property_database.h"
 #include "strings.h"
 
@@ -26,30 +28,30 @@ int main()
 	
 	x = DB.getColorProperty(RED);
 
-	if (x.getName() == RED_1_NAME)
+	if (x.getName() != RED_1_NAME)
 		cerr << "Error in testing red 1 name" << endl;
 
 	railroad test = DB.getRailroadProperty();
 	
-	if (test.getName() == RAILROAD_4_NAME)
+	if (test.getName() != RAILROAD_4_NAME)
 		cerr << "Error in testing Railroad 4 name" << endl;
 
 	utility test_2 = DB.getUtilityProperty();
 	utility test_22 = test_2;
 
-	if (test_2.getName() == UTILITY_1_NAME)
+	if (test_2.getName() != UTILITY_1_NAME)
 		cerr << "Error in Utility 1 name" << endl;
 
-	if (test_2 == test_22)
+	if (test_2 != test_22)
 		cerr << "Error in Comparison on utilities" << endl;
 
-	test_2 = DB.getUtilityProperty();
+	//test_2 = DB.getUtilityProperty();
 
 	color x_1 = DB.getColorProperty(BLUE);
 	color x_2 = DB.getColorProperty(BLUE);
 	color x_3 = DB.getColorProperty(BLUE);
 
-	if (x_3.getName() == "")
+	if (x_3.getName() != "")
 		cerr << "Property doesn't exists" << endl;
 
 	DB.returnColorProperty(x_1);
@@ -76,4 +78,4 @@ int main()
 	test = DB.getRailroadProperty();
 
 	return 0;
-}*/
+}

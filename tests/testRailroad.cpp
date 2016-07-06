@@ -1,6 +1,7 @@
-/*#include <iostream>
+#include <iostream>
 #include <string>
 #include "railroad.h"
+//
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int main()
 	if (test.getName() != "Element")
 		cerr << "Error in the setting of cost" << endl;
 
-	for (int i = 1; i < 6; ++i)
+	for (int i = 1; i < 5; ++i)
 	{
 		int testRent;
 		switch (i)
@@ -56,6 +57,8 @@ int main()
 		if (test.getRent() != testRent)
 			cerr << "Error in updateRent() " << endl;
 	}
+	
 	cout << "End of test" << endl;
 	return 0;
-}*/
+
+}

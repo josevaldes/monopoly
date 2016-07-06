@@ -1,4 +1,4 @@
-/*
+//
 #include <iostream>
 #include <string>
 #include "color.h"
@@ -33,7 +33,7 @@ int main()
 
 	// Testing allColorRent()
 
-	test.allColorRent();
+	test.allColorRent(true);
 	if (test.getRent() != 20)
 		cerr << "Error in allColorRent()"<<endl;
 
@@ -44,26 +44,32 @@ int main()
 		switch (i)
 		{
 		    case 0:
-				testRent = 25;
+				testRent = 20;
 				break;
 
 			case 1:
-				testRent = 50;
+				testRent = 25;
 				break;
 
 			case 2:
-				testRent = 75;
+				testRent = 50;
 				break;
 
 			case 3:
-				testRent = 100;
+				testRent = 75;
 				break;
 
-			default:
-				testRent = 200;
+			case 4:
+				testRent = 100;
+				break;
+		        case 5:
+			        testRent = 200;
+				break;
+			
+			default:;
 		}
 
-		test.updateRent(true);
+		if(i!= 0) test.updateRent(false, true);
 		if (test.getRent() != testRent)
 			cerr << "Error in updateRent() increase" << endl;
 	}
@@ -94,7 +100,7 @@ int main()
 			testRent = 20;
 		}
 
-		test.updateRent(false);
+		test.updateRent(false, false);
 		if (test.getRent() != testRent)
 			cerr << "Error in updateRent() decrease" << endl;
 	}
@@ -112,4 +118,4 @@ int main()
 
 	cout << "End of test" << endl;
 	return 0;
-}*/
+}

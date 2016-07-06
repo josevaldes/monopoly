@@ -273,7 +273,7 @@ void mortageProperty(user & client)
 			if (client.subtractCurrency(payment))
 			{
 				client.removeColorProperty(colorSelected);
-				colorSelected.setMortage(false);
+				colorSelected.setMortaged(false);
 				client.addColorProperty(colorSelected);
 			}
 
@@ -282,7 +282,7 @@ void mortageProperty(user & client)
 		else
 		{
 			client.removeColorProperty(colorSelected);
-			colorSelected.setMortage(true);
+			colorSelected.setMortaged(true);
 			client.addColorProperty(colorSelected);
 			client.addCurrency(colorSelected.getMortage());
 		}

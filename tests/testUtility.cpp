@@ -1,4 +1,4 @@
-/*
+//
 #include <iostream>
 #include <string>
 #include "utility.h"
@@ -27,6 +27,7 @@ int main()
 	for (int i = 1; i < 3; ++i)
 	{
 		int testRent = 20 * i;
+		//Choose 5 & 10
 		if (test.getRent() != testRent)
 			cerr << "Error in setting the rent" << endl;
 	}
@@ -38,4 +39,4 @@ int main()
 	cout << "End of test" << endl;
 
 	return 0;
-}*/
+}
