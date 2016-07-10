@@ -271,18 +271,18 @@ void mortageProperty(user & client)
 
 			if (client.subtractCurrency(payment))
 			{
-				client.removeColorProperty(colorSelected);
+				//client.removeColorProperty(colorSelected);
 				colorSelected->setMortage(false);
-				client.addColorProperty(colorSelected);
+				//client.addColorProperty(colorSelected);
 			}
 
 		}
 
 		else
 		{
-			client.removeColorProperty(colorSelected);
+			//client.removeColorProperty(colorSelected);
 			colorSelected->setMortage(true);
-			client.addColorProperty(colorSelected);
+			//client.addColorProperty(colorSelected);
 			client.addCurrency(colorSelected->getMortage());
 		}
 
@@ -306,17 +306,17 @@ void mortageProperty(user & client)
 
 			if (client.subtractCurrency(payment))
 			{
-				client.removeRailroadProperty(railSelected);
+			//	client.removeRailroadProperty(railSelected);
 				railSelected->setMortage(false);
-				client.addRailroadProperty(railSelected);
+			//	client.addRailroadProperty(railSelected);
 			}
 		}
 		
 		else
 		{
-			client.removeRailroadProperty(railSelected);
+			//client.removeRailroadProperty(railSelected);
 			railSelected->setMortage(true);
-			client.addRailroadProperty(railSelected);
+			//client.addRailroadProperty(railSelected);
 			client.addCurrency(railSelected->getMortage());
 		}
 		
@@ -341,17 +341,17 @@ void mortageProperty(user & client)
 
 			if (client.subtractCurrency(payment))
 			{
-				client.removeUtilityProperty(utilitySelected);
+			//	client.removeUtilityProperty(utilitySelected);
 				utilitySelected->setMortage(false);
-				client.addUtilityProperty(utilitySelected);
+			//	client.addUtilityProperty(utilitySelected);
 			}
 		}
 
 		else
 		{
-			client.removeUtilityProperty(utilitySelected);
+			//client.removeUtilityProperty(utilitySelected);
 			utilitySelected->setMortage(true);
-			client.addUtilityProperty(utilitySelected);
+			//client.addUtilityProperty(utilitySelected);
 			client.addCurrency(utilitySelected->getMortage());
 		}
 		
@@ -444,9 +444,9 @@ void buySellHouses(user & client)
 					{
 						if (client.subtractCurrency(proposed[i]->getCostHouse()))
 						{
-							client.removeColorProperty(proposed[i]);
+							//client.removeColorProperty(proposed[i]);
 							proposed[i]->updateRent(false, true);
-							client.addColorProperty(proposed[i]);
+							//client.addColorProperty(proposed[i]);
 							priorityList[i] = false;
 						}
 					 }
@@ -741,24 +741,29 @@ void returnAllProperties(user & current, property_database & DB)
 	vector<utility*> utilityTemp;
 
 	string currentColor[] = { PURPLE, SKY, MAGENTA, ORANGE, RED, YELLOW, GREEN, BLUE };
-
+        
 	for (int i = 0; i < 8; ++i)
 	{
 		colorTemp = current.getColorProperties(currentColor[i]);
 		
-		for (int j = 0; j < colorTemp.size(); ++i)
+		for (int j = 0; j < colorTemp.size(); ++j)
 		{
 			DB.returnColorProperty(colorTemp[j]);
+			current.removeColorProperty(colorTemp[j]);
 		}
 	}
-
+        
+	railTemp = current.getRailroadProperties();
 	for (int i = 0; i < railTemp.size(); ++i)
 	{
 		DB.returnRailroadProperty(railTemp[i]);
+		current.removeRailroadProperty(railTemp[i]);
 	}
 
+	utilityTemp = current.getUtilityProperties();
 	for (int i = 0; i < utilityTemp.size(); ++i)
 	{
 		DB.returnUtilityProperty(utilityTemp[i]);
+		current.removeUtilityProperty(utilityTemp[i]);
 	}
 }

@@ -1,4 +1,4 @@
-/*
+
 #include <string>
 #include <iostream>
 #include "menu_methods.h"
@@ -21,5 +21,7 @@ int main()
 
 	returnAllProperties(player, DB);
 
+	player.displayBalance();
+	
 	return 0;
-}*/
+}

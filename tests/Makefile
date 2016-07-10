@@ -34,6 +34,15 @@ testOpening: testOpening.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_
 	$(CC) $(CXXFLAGS) -o testOpening testOpening.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
 	./testOpening
 
+
 testBuyToPlayer: testBuyPropertyToPlayer.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp
 	$(CC) $(CXXFLAGS) -o testBuyToPlayer testBuyPropertyToPlayer.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
 	./testBuyToPlayer
+
+testMortage: testMortageProperty.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp
+	$(CC) $(CXXFLAGS) -o testMortage testMortageProperty.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
+	./testMortage
+
+testReturnAll: testReturnAllProperties.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp
+	$(CC) $(CXXFLAGS) -o testReturnAll testReturnAllProperties.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
+	./testReturnAll

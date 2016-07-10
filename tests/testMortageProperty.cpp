@@ -1,7 +1,6 @@
-/*
+
 #include <iostream>
 #include <string>
-#include <conio.h>
 #include "strings.h"
 #include "user.h"
 #include "property_database.h"
@@ -30,4 +29,4 @@ int main()
 
 	return 0;
 }
-*/
+
