@@ -12,20 +12,23 @@ using namespace std;
 
 class property_database
 {
-    private:
-	    color colors[8][3];
-	    railroad rails[4];
-	    utility utilities[2];
+private:
+	    color* colors[8][3];
+	    railroad* rails[4];
+	    utility* utilities[2];
+      railroad* default_railroad;
+      utility* default_utility;
+      
 
-    public:
+public:
 		explicit property_database();
-		~property_database(){}
-		color getColorProperty(string);
-		void returnColorProperty(color);
-		railroad getRailroadProperty();
-		void returnRailroadProperty(railroad);
-		utility getUtilityProperty();
-		void returnUtilityProperty(utility);
+		~property_database();
+		color* getColorProperty(string);
+		void returnColorProperty(color*);
+		railroad* getRailroadProperty();
+		void returnRailroadProperty(railroad*);
+		utility* getUtilityProperty();
+		void returnUtilityProperty(utility*);
 };
 
 #endif //PROPERTY_DATABASE_H

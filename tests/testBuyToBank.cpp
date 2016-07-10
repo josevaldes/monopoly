@@ -1,4 +1,4 @@
-/*
+
 #include <iostream>
 #include <string>
 #include "user.h"
@@ -22,4 +22,4 @@ int main()
 	
 	return 0;
 }
-*/
+

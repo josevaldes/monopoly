@@ -1,4 +1,4 @@
-/*
+
 #include <iostream>
 #include <string>
 #include "user.h"
@@ -29,20 +29,20 @@ int main()
 	}
 
 	player_1.displayBalance();
-	Custom_Clear();
+//	Custom_Clear();
 
 	player_2.displayBalance();
-	Custom_Clear();
+//	Custom_Clear();
 	
 	buyPropertyToPlayer(player_1, player_2);
-	Custom_Clear();
+//	Custom_Clear();
 
 	player_1.displayBalance();
-	Custom_Clear();
+//	Custom_Clear();
 
 	player_2.displayBalance();
-	Custom_Clear();
+//	Custom_Clear();
 
 	return 0;
 }
-*/
+

@@ -16,9 +16,9 @@ void buyPropertyToBank(user & buyer, property_database & DB)
 	int category = getCategory();
 	string colorName;
 	string ans;
-	color colorSelected;
-	railroad railSelected;
-	utility utilitySelected;
+	color* colorSelected;
+	railroad* railSelected;
+	utility* utilitySelected;
 
 	switch(category)
 	{
@@ -29,14 +29,14 @@ void buyPropertyToBank(user & buyer, property_database & DB)
                 toUpperString(colorName);
 		colorSelected = DB.getColorProperty(colorName);
 		
-		if (colorSelected.getName() == "")
+		if (colorSelected == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, ans);
 			return;
 		}
 
-		if (buyer.subtractCurrency(colorSelected.getCost()))
+		if (buyer.subtractCurrency(colorSelected->getCost()))
 			buyer.addColorProperty(colorSelected);
 
 		break;
@@ -44,14 +44,14 @@ void buyPropertyToBank(user & buyer, property_database & DB)
 	case 2:
 		railSelected = DB.getRailroadProperty();
 
-		if (railSelected.getName() == "")
+		if (railSelected  == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, ans);
 			return;
 		}
 
-		if (buyer.subtractCurrency(railSelected.getCost()))
+		if (buyer.subtractCurrency(railSelected->getCost()))
 			buyer.addRailroadProperty(railSelected);
 
 		break;
@@ -59,14 +59,14 @@ void buyPropertyToBank(user & buyer, property_database & DB)
 	default:
 		utilitySelected = DB.getUtilityProperty();
 
-		if (utilitySelected.getName() == "")
+		if (utilitySelected == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, ans);
 			return;
 		}
 
-		if (buyer.subtractCurrency(utilitySelected.getCost()))
+		if (buyer.subtractCurrency(utilitySelected->getCost()))
 			buyer.addUtilityProperty(utilitySelected);
 	}
 }
@@ -79,9 +79,9 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 	string colorName;
 	string price;
 	string ans;
-	color colorSelected;
-	railroad railSelected;
-	utility utilitySelected;
+	color* colorSelected;
+	railroad* railSelected;
+	utility* utilitySelected;
 
 
 	switch (category)
@@ -89,11 +89,10 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 	case 1:
 		cout << "Select the color of the property you want to buy" << endl;
 		getline(cin, colorName);
-		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
                 toUpperString(colorName);
 		colorSelected = seller.getColorProperty(colorName);
 		
-		if (colorSelected.getName() == "")
+		if (colorSelected == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, ans);
@@ -142,7 +141,7 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 	case 2:
 		railSelected = seller.getRailroadProperty();
 
-		if (railSelected.getName() == "")
+		if (railSelected  == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, ans);
@@ -192,7 +191,7 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 	case 3:
 		utilitySelected = seller.getUtilityProperty();
 
-		if (utilitySelected.getName() == "")
+		if (utilitySelected == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, ans);
@@ -244,9 +243,9 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 void mortageProperty(user & client)
 {
 	string colorName;
-	color colorSelected;
-	railroad railSelected;
-	utility utilitySelected;
+	color* colorSelected;
+	railroad* railSelected;
+	utility* utilitySelected;
 
 	int category = getCategory();
 
@@ -259,21 +258,21 @@ void mortageProperty(user & client)
                 toUpperString(colorName);
 		colorSelected = client.getColorProperty(colorName);
 
-		if (colorSelected.getName() == "")
+		if (colorSelected == nullptr)
 		{
 			cerr << "No property was selected, please press enter to return to main menu" << endl;
 			getline(cin, colorName);
 			return;
 		}
 
-		if (colorSelected.isMortaged())
+		if (colorSelected->isMortaged())
 		{
-			int payment = colorSelected.getMortage() * 1.1;
+			int payment = colorSelected->getMortage() * 1.1;
 
 			if (client.subtractCurrency(payment))
 			{
 				client.removeColorProperty(colorSelected);
-				colorSelected.setMortaged(false);
+				colorSelected->setMortage(false);
 				client.addColorProperty(colorSelected);
 			}
 
@@ -282,9 +281,9 @@ void mortageProperty(user & client)
 		else
 		{
 			client.removeColorProperty(colorSelected);
-			colorSelected.setMortaged(true);
+			colorSelected->setMortage(true);
 			client.addColorProperty(colorSelected);
-			client.addCurrency(colorSelected.getMortage());
+			client.addCurrency(colorSelected->getMortage());
 		}
 
 		break;
@@ -294,21 +293,21 @@ void mortageProperty(user & client)
 
 		railSelected = client.getRailroadProperty();
 
-		if (railSelected.getName() == "")
+		if (railSelected == nullptr)
 		{
 			cerr << "No property was selected, returning to main menu" << endl;
 			getline(cin, colorName);
 			return;
 		}
 
-		if (railSelected.isMortaged())
+		if (railSelected->isMortaged())
 		{
-			int payment = railSelected.getMortage() * 1.1;
+			int payment = railSelected->getMortage() * 1.1;
 
 			if (client.subtractCurrency(payment))
 			{
 				client.removeRailroadProperty(railSelected);
-				railSelected.setMortage(false);
+				railSelected->setMortage(false);
 				client.addRailroadProperty(railSelected);
 			}
 		}
@@ -316,9 +315,9 @@ void mortageProperty(user & client)
 		else
 		{
 			client.removeRailroadProperty(railSelected);
-			railSelected.setMortage(true);
+			railSelected->setMortage(true);
 			client.addRailroadProperty(railSelected);
-			client.addCurrency(railSelected.getMortage());
+			client.addCurrency(railSelected->getMortage());
 		}
 		
 
@@ -329,21 +328,21 @@ void mortageProperty(user & client)
 
 		utilitySelected = client.getUtilityProperty();
 
-		if (utilitySelected.getName() == "")
+		if (utilitySelected == nullptr)
 		{
 			cerr << "No property was selected, returning to main menu" << endl;
 			getline(cin, colorName);
 			return;
 		}
 
-		if (utilitySelected.isMortaged())
+		if (utilitySelected->isMortaged())
 		{
-			int payment = railSelected.getMortage() * 1.1;
+			int payment = utilitySelected->getMortage() * 1.1;
 
 			if (client.subtractCurrency(payment))
 			{
 				client.removeUtilityProperty(utilitySelected);
-				utilitySelected.setMortage(false);
+				utilitySelected->setMortage(false);
 				client.addUtilityProperty(utilitySelected);
 			}
 		}
@@ -351,9 +350,9 @@ void mortageProperty(user & client)
 		else
 		{
 			client.removeUtilityProperty(utilitySelected);
-			utilitySelected.setMortage(true);
+			utilitySelected->setMortage(true);
 			client.addUtilityProperty(utilitySelected);
-			client.addCurrency(utilitySelected.getMortage());
+			client.addCurrency(utilitySelected->getMortage());
 		}
 		
 	}
@@ -390,12 +389,12 @@ void buySellHouses(user & client)
 		getline(cin, colorName);
 		//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
 		toUpperString(colorName);
-		vector<color> proposed = client.getColorProperties(colorName);
+		vector<color*> proposed = client.getColorProperties(colorName);
 
 		if (proposed.size() <= 2)
 		{
-			if (proposed.size() != 2 || (proposed[0].getColor() != PURPLE
-				&& proposed[0].getColor() != BLUE))
+			if (proposed.size() != 2 || (proposed[0]->getColor() != PURPLE
+				&& proposed[0]->getColor() != BLUE))
 
 			{
 				cerr << "You still don't have all the color properties" << endl
@@ -410,7 +409,7 @@ void buySellHouses(user & client)
 
 			for (int i = 0; i < proposed.size(); ++i)
 			{
-			    if (proposed[i].getHouses() == 0)
+			    if (proposed[i]->getHouses() == 0)
 				    priorityList[i] = true;
 
 				if (i == 0)
@@ -419,13 +418,13 @@ void buySellHouses(user & client)
 				    continue;
 				}
 
-				if (proposed[i].getHouses() < proposed[i - 1].getHouses())
+				if (proposed[i]->getHouses() < proposed[i - 1]->getHouses())
 				{
 				    priorityList[i] = true;
 				    priorityList[i - 1] = false;
 				}
 
-				if (proposed[i].getHouses() == proposed[i - 1].getHouses())
+				if (proposed[i]->getHouses() == proposed[i - 1]->getHouses())
 				    priorityList[i] = priorityList[i - 1];
 			 }
 
@@ -436,17 +435,17 @@ void buySellHouses(user & client)
 			 {
 			    if (priorityList[i])
 			    {
-				    cout << char(indicator + i) << ". " << proposed[i].getName() << endl
+				    cout << char(indicator + i) << ". " << proposed[i]->getName() << endl
 					    << "If so, type yes. Otherwise, just type enter" << endl;
 					
 					getline(cin, ans);
 
 					if (ans[0] == 'Y' || ans[0] == 'y')
 					{
-						if (client.subtractCurrency(proposed[i].getCostHouse()))
+						if (client.subtractCurrency(proposed[i]->getCostHouse()))
 						{
 							client.removeColorProperty(proposed[i]);
-							proposed[i].updateRent(false, true);
+							proposed[i]->updateRent(false, true);
 							client.addColorProperty(proposed[i]);
 							priorityList[i] = false;
 						}
@@ -471,22 +470,22 @@ void buySellHouses(user & client)
 			getline(cin, colorName);
 			//transform(colorName.begin(), colorName.end(), colorName.begin(), toupper);
                         toUpperString(colorName);
-			color selected = client.getColorProperty(colorName);
+			color* selected = client.getColorProperty(colorName);
 			
-			if (selected.getName() == "")
+			if (selected == nullptr)
 			{
 				cerr << "No property was selected, press enter to return to main menu" << endl;
 				getline(cin, ans);
 				return;
 			}
 
-			cout << "How many houses you want to sell from this property (max: "<< selected.getHouses() 
+			cout << "How many houses you want to sell from this property (max: "<< selected->getHouses() 
 				 << " house(s))"<<endl;
 			getline(cin, ans);
 			
 			numHouses = strToInt(ans);
 
-			while (selected.getHouses() < numHouses)
+			while (selected->getHouses() < numHouses)
 			{
 				cerr << "Not enough houses to sell, please type an appropiate number" << endl;
 				getline(cin, ans);
@@ -496,9 +495,9 @@ void buySellHouses(user & client)
 			client.removeColorProperty(selected);
 
 			for (int i = 0; i < numHouses; ++i)
-				selected.updateRent(false, false);
+				selected->updateRent(false, false);
 
-			client.addCurrency(numHouses * (selected.getCostHouse() / 2));
+			client.addCurrency(numHouses * (selected->getCostHouse() / 2));
 			
 			client.addColorProperty(selected);
 
@@ -522,9 +521,9 @@ void payRent(user & rentee, user & renter)
 {
 	int category = getCategory();
 	string colorName;
-	color colorSelected;
-	railroad railSelected;
-	utility utilitySelected;
+	color* colorSelected;
+	railroad* railSelected;
+	utility* utilitySelected;
 
 	switch (category)
 	{
@@ -536,16 +535,16 @@ void payRent(user & rentee, user & renter)
                 toUpperString(colorName);
 		colorSelected = renter.getColorProperty(colorName);
 
-		if (colorSelected.getName() == "")
+		if (colorSelected  == nullptr)
 		{
 			cerr << "No property was selected, returning to main menu" << endl;
 			Custom_Clear();
 			return;
 		}
 
-		cerr << "Rent charge: " << colorSelected.getRent()<<endl;
+		cerr << "Rent charge: " << colorSelected->getRent()<<endl;
 
-		if (colorSelected.isMortaged())
+		if (colorSelected->isMortaged())
 		{
 			cout << "Property in mortage, you renter cannot charge the rent cost" << endl;
 			cout << "Press enter to return to main menu";
@@ -554,12 +553,12 @@ void payRent(user & rentee, user & renter)
 
 		}
 
-		if (rentee.subtractCurrency(colorSelected.getRent()) == false)
+		if (rentee.subtractCurrency(colorSelected->getRent()) == false)
 			rentee.setDebt(true);
 
 		else
 		{
-			renter.addCurrency(colorSelected.getRent());
+			renter.addCurrency(colorSelected->getRent());
 			rentee.setDebt(false);
 		}
 
@@ -571,9 +570,16 @@ void payRent(user & rentee, user & renter)
 
 		railSelected = renter.getRailroadProperty();
 
-		cerr << "Rent charge: " << railSelected.getRent() << endl;
+		if(railSelected == nullptr)
+		{
+                   cout << "No property was selected, returning to main menu\n";
+		   Custom_Clear();
+		   break;
+		}
 
-		if (railSelected.isMortaged())
+		cerr << "Rent charge: " << railSelected->getRent() << endl;
+
+		if (railSelected->isMortaged())
 		{
 			cout << "Property in mortage, renter cannot charge the rent cost" << endl;
 			cout << "Press enter to return to main menu";
@@ -582,13 +588,13 @@ void payRent(user & rentee, user & renter)
 		}
 
 
-		if (rentee.subtractCurrency(railSelected.getRent()) == false)
+		if (rentee.subtractCurrency(railSelected->getRent()) == false)
 			rentee.setDebt(true);
 
 		else
 		{
 			rentee.setDebt(false);
-			renter.addCurrency(railSelected.getRent());
+			renter.addCurrency(railSelected->getRent());
 		}
 		
 		break;
@@ -597,11 +603,19 @@ void payRent(user & rentee, user & renter)
 		cout << "Select the property to be charged" << endl;
 
 		utilitySelected = renter.getUtilityProperty();
-		int utilityCharge = utilitySelected.getRent();
+		
+		if(utilitySelected == nullptr)
+		{
+                   cout << "No property selected, returning to main menu\n";
+		   Custom_Clear();
+		   break;
+		}
+
+		int utilityCharge = utilitySelected->getRent();
 
 		cerr << "Rent Charge: " << utilityCharge << endl;
 
-		if (utilitySelected.isMortaged())
+		if (utilitySelected->isMortaged())
 		{
 			cout << "Property in mortage, you renter cannot charge the rent cost" << endl;
 			cout << "Press enter to return to main menu";
@@ -704,12 +718,15 @@ LinkedUser* opening()
 			repeat = false;
 
 	} while (repeat);
-
-	LinkedUser* list = new LinkedUser(user(names[0]));
-
+        
+	cerr << "Before\n";
+	user first = user(names[0]);
+	LinkedUser* list = new LinkedUser(first);
+        cerr << "New\n";
 	for (int i = 1; i < names.size(); ++i)
 	{
-		list->addUser(user(names[i]));
+	        user ite = user(names[i]);
+		list->addUser(ite);
 	}
 
 	list->createCyclicList();
@@ -721,9 +738,9 @@ LinkedUser* opening()
 
 void returnAllProperties(user & current, property_database & DB)
 {
-	vector<color> colorTemp;
-	vector<railroad> railTemp;
-	vector<utility> utilityTemp;
+	vector<color*> colorTemp;
+	vector<railroad*> railTemp;
+	vector<utility*> utilityTemp;
 
 	string currentColor[] = { PURPLE, SKY, MAGENTA, ORANGE, RED, YELLOW, GREEN, BLUE };
 

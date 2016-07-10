@@ -13,7 +13,7 @@ Node::Node()
 	prev = nullptr;
 }
 
-Node::Node(user temp)
+Node::Node( user temp)
 {
 	player = temp;
 	next = nullptr;
@@ -102,7 +102,7 @@ void LinkedUser::displayList()
 
 }
 
-void LinkedUser::addUser(user added)
+void LinkedUser::addUser( user added)
 {
 	Node* ite = head;
 	
@@ -146,47 +146,6 @@ bool LinkedUser::removeUser(Node* remove)
 	createCyclicList();
 	cerr << "User deleted\n";
 	return true;
-	/*
-	if (remove == head)
-	{
-		head = head->next;
-		nextCurrent();
-		delete remove;
-		createCyclicList();
-		return true;
-	}
-	
-	Node* ite = head->next;
-    
-	if (ite == remove)
-	{
-		head->next = remove->next;
-		nextCurrent();
-		delete remove;
-		return true;
-	}
-
-	while (ite != head)
-	{
-		if (ite->next == remove)
-		{
-			ite->next = remove->next;
-
-			if (remove == tail)
-			{
-				tail = ite;
-			}
-
-			nextCurrent();
-			delete remove;
-			
-			return true;
-		}
-
-		ite = ite->next;
-	}
-	*/
-
 }
 
 void LinkedUser::createCyclicList()

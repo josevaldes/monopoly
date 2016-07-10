@@ -16,10 +16,10 @@ class Node
 
     public:
 		Node();
-		explicit Node(user);
+		explicit Node( user);
 		
 		user* getUser();
-		void setUser(user);
+		void setUser( user);
 
 		Node* getNext();
 		void setNext(Node*);
@@ -36,7 +36,7 @@ private:
 	
 public:
 	LinkedUser();
-	explicit LinkedUser(user);
+	explicit LinkedUser( user);
 
 	//void eliminateFirst(LinkedUser*);
 	Node* getHead();

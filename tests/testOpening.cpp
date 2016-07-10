@@ -1,4 +1,4 @@
-/*
+
 #include <iostream>
 #include <string>
 #include "property_database.h"
@@ -34,4 +34,4 @@ int main()
 	test_2->displayBalance();
 
 	return 0;
-}*/
+}

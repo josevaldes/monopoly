@@ -70,7 +70,7 @@ class Property
          owned = flag;
       }
 
-      virtual void setMortaged(bool flag)
+      virtual void setMortage(bool flag)
       {
          mortaged = flag;
       }

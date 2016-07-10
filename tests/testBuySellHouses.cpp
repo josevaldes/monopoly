@@ -1,4 +1,4 @@
-/*
+
 #include <iostream>
 #include <iostream>
 #include <string>
@@ -29,4 +29,4 @@ int main()
 	player_1.displayBalance();
 	return 0;
 }
-*/
+

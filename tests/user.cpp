@@ -26,60 +26,60 @@ void user::displayBalance()
 
 	for (int i = 0; i < purple.size(); ++i)
 	{
-		cout << purple[i].getName() << "  Color: " << purple[i].getColor() << endl;
-		cout << "Num of Houses: " << purple[i].getHouses() << endl;
+		cout << purple[i]->getName() << "  Color: " << purple[i]->getColor() << endl;
+		cout << "Num of Houses: " << purple[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < sky.size(); ++i)
 	{
-		cout << sky[i].getName() << "  Color: " << sky[i].getColor() << endl;
-		cout << "Num of Houses: " << sky[i].getHouses() << endl;
+		cout << sky[i]->getName() << "  Color: " << sky[i]->getColor() << endl;
+		cout << "Num of Houses: " << sky[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < magenta.size(); ++i)
 	{
-		cout << magenta[i].getName() << "  Color: " << magenta[i].getColor() << endl;
-		cout << "Num of Houses: " << magenta[i].getHouses() << endl;
+		cout << magenta[i]->getName() << "  Color: " << magenta[i]->getColor() << endl;
+		cout << "Num of Houses: " << magenta[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < orange.size(); ++i)
 	{
-		cout << orange[i].getName() << "  Color: " << orange[i].getColor() << endl;
-		cout << "Num of Houses: " << orange[i].getHouses() << endl;
+		cout << orange[i]->getName() << "  Color: " << orange[i]->getColor() << endl;
+		cout << "Num of Houses: " << orange[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < red.size(); ++i)
 	{
-		cout << red[i].getName() << "  Color: " << red[i].getColor() << endl;
-		cout << "Num of Houses: " << red[i].getHouses() << endl;
+		cout << red[i]->getName() << "  Color: " << red[i]->getColor() << endl;
+		cout << "Num of Houses: " << red[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < yellow.size(); ++i)
 	{
-		cout << yellow[i].getName() << "  Color: " << yellow[i].getColor() << endl;
-		cout << "Num of Houses: " << yellow[i].getHouses() << endl;
+		cout << yellow[i]->getName() << "  Color: " << yellow[i]->getColor() << endl;
+		cout << "Num of Houses: " << yellow[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < green.size(); ++i)
 	{
-		cout << green[i].getName() << "  Color: " << green[i].getColor() << endl;
-		cout << "Num of Houses: " << green[i].getHouses() << endl;
+		cout << green[i]->getName() << "  Color: " << green[i]->getColor() << endl;
+		cout << "Num of Houses: " << green[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < blue.size(); ++i)
 	{
-		cout << blue[i].getName() << "  Color: " << blue[i].getColor() << endl;
-		cout << "Num of Houses: " << blue[i].getHouses() << endl;
+		cout << blue[i]->getName() << "  Color: " << blue[i]->getColor() << endl;
+		cout << "Num of Houses: " << blue[i]->getHouses() << endl;
 	}
 
 	for (int i = 0; i < rails.size(); ++i)
 	{
-		cout << rails[i].getName() << "  Railroad" << endl;
+		cout << rails[i]->getName() << "  Railroad" << endl;
 	}
 
 	for (int i = 0; i < utilities.size(); ++i)
 	{
-		cout << utilities[i].getName() << " Utility" << endl;
+		cout << utilities[i]->getName() << " Utility" << endl;
 	}
 
 }
@@ -108,22 +108,22 @@ bool user::subtractCurrency(int money)
 	}
 }
 
-void user::updateColorRent(vector<color>& properties, bool flag)
+void user::updateColorRent(vector<color*>& properties, bool flag)
 {
 	for (int i = 0; i < properties.size(); ++i)
 	{
-		properties[i].allColorRent(flag);
-		properties[i].updateRent(true, true);
+		properties[i]->allColorRent(flag);
+		properties[i]->updateRent(true, true);
 		
 	}
 }
 
-void user::addColorProperty(color temp)
+void user::addColorProperty(color* temp)
 {
-	if (temp.getName() == "")
+	if (temp->getName() == "")
 		return;
 
-	int ans = categoryColor(temp.getColor());
+	int ans = categoryColor(temp->getColor());
 
 	switch (ans)
 	{
@@ -201,9 +201,9 @@ void user::addColorProperty(color temp)
 	}
 }
 
-void user::removeColorProperty(color temp)
+void user::removeColorProperty(color* temp)
 {
-	int ans = categoryColor(temp.getColor());
+	int ans = categoryColor(temp->getColor());
 
 	switch (ans)
 	{
@@ -305,9 +305,9 @@ void user::removeColorProperty(color temp)
 	}
 }
 
-color user::getColorProperty(string colorName)
+color* user::getColorProperty(string colorName)
 {
-	vector<color> election;
+	vector<color*> election;
 	string answer;
 	int propertyIndex;
 	int ans = categoryColor(colorName);
@@ -355,7 +355,7 @@ color user::getColorProperty(string colorName)
 
 		for (int i = 0; i < election.size(); ++i)
 		{
-			cout << (i + 1) << ". " << election[i].getName() << endl;
+			cout << (i + 1) << ". " << election[i]->getName() << endl;
 		}
 
 		getline(cin, answer);
@@ -366,7 +366,7 @@ color user::getColorProperty(string colorName)
 		if (propertyIndex == -1)
 		{
 			cerr << "No property available" << endl;
-			return color();
+			return nullptr;
 		}
 
 		if (propertyIndex >= 0 && propertyIndex < election.size())
@@ -382,7 +382,7 @@ color user::getColorProperty(string colorName)
 	return  election[propertyIndex];
 }
 
-vector<color> user::getColorProperties(string colorName)
+const vector<color*>& user::getColorProperties(string colorName)
 {
 	int ans = categoryColor(colorName);
 	switch (ans)
@@ -421,20 +421,20 @@ vector<color> user::getColorProperties(string colorName)
 	}
 }
 
-void user::addRailroadProperty(railroad temp)
+void user::addRailroadProperty(railroad* temp)
 {
-	if (temp.getName() == "")
+	if (temp->getName() == "")
 		return;
 	
 	rails.push_back(temp);
 	
 	for (int i = 0; i < rails.size(); ++i)
 	{
-		rails[i].updateRent(rails.size());
+		rails[i]->updateRent(rails.size());
 	}
 }
 
-void user::removeRailroadProperty(railroad temp)
+void user::removeRailroadProperty(railroad* temp)
 {
 	for (int i = 0; i < rails.size(); ++i)
 	{
@@ -443,14 +443,14 @@ void user::removeRailroadProperty(railroad temp)
 			rails.erase(rails.begin() + i);
 			
 			for (int j = 0; j < rails.size(); ++j)
-			    rails[j].updateRent(rails.size());
+			    rails[j]->updateRent(rails.size());
 
 			break;
 		}
 	}
 }
 
-railroad user::getRailroadProperty()
+railroad* user::getRailroadProperty()
 {
 	bool validRail = false;
 	string ans;
@@ -463,7 +463,7 @@ railroad user::getRailroadProperty()
 
 		for (int i = 0; i < rails.size(); ++i)
 		{
-			cout << (i + 1) << ". " << rails[i].getName() << endl;
+			cout << (i + 1) << ". " << rails[i]->getName() << endl;
 		}
 
 		getline(cin, ans);
@@ -474,7 +474,7 @@ railroad user::getRailroadProperty()
 		if (propertyIndex == -1)
 		{
 			cerr << "No property available" << endl;
-			return railroad();
+			return nullptr;
 		}
 
 		if (propertyIndex >= 0 && propertyIndex < rails.size())
@@ -491,25 +491,25 @@ railroad user::getRailroadProperty()
 
 }
 
-vector <railroad> user::getRailroadProperties()
+const vector<railroad*>& user::getRailroadProperties()
 {
 	return rails;
 }
 
-void user::addUtilityProperty(utility temp)
+void user::addUtilityProperty(utility* temp)
 {
-	if (temp.getName() == "")
+	if (temp->getName() == "")
 		return;
 
 	utilities.push_back(temp);
 	
 	for (int i = 0; i < utilities.size(); ++i)
 	{
-		utilities[i].updateFactor(utilities.size());
+		utilities[i]->updateFactor(utilities.size());
 	}
 }
 
-void user::removeUtilityProperty(utility temp)
+void user::removeUtilityProperty(utility* temp)
 {
 	for (int i = 0; i < utilities.size(); ++i)
 	{
@@ -518,14 +518,14 @@ void user::removeUtilityProperty(utility temp)
 			utilities.erase(utilities.begin() + i);
 
 			for (int j = 0; j < utilities.size(); ++j)
-				utilities[j].updateFactor(utilities.size());
+				utilities[j]->updateFactor(utilities.size());
 
 			break;
 		}
 	}
 }
 
-utility user::getUtilityProperty()
+utility* user::getUtilityProperty()
 {
 	bool validUtility = false;
 	string ans;
@@ -538,7 +538,7 @@ utility user::getUtilityProperty()
 
 		for (int i = 0; i < utilities.size(); ++i)
 		{
-			cout << (i + 1) << ". " << utilities[i].getName() << endl;
+			cout << (i + 1) << ". " << utilities[i]->getName() << endl;
 		}
 
 		getline(cin, ans);
@@ -549,7 +549,7 @@ utility user::getUtilityProperty()
 		if (propertyIndex == -1)
 		{
 			cerr << "No property available" << endl;
-			return utility();
+			return nullptr;
 		}
 
 		if (propertyIndex >= 0 && propertyIndex < utilities.size())
@@ -565,7 +565,7 @@ utility user::getUtilityProperty()
 	return  utilities[propertyIndex];
 }
 
-vector<utility> user::getUtilityProperties()
+const vector<utility*>& user::getUtilityProperties()
 {
 	return utilities;
 }
