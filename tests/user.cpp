@@ -5,15 +5,40 @@
 
 using namespace std;
 
-user::user(string name) :player(name)
+user::user(string name, int startPt, bool cpu) :player(name), curr_pos(startPt), is_cpu(cpu)
 {
 	currency = 1500;
 	inDebt = false;
+	is_in_jail = false;
 }
 
 user::user()
 {
 	player = "";
+}
+
+const bool & user::isJailed()
+{
+   return is_in_jail;
+}
+
+void user::setJailed(bool flag)
+{
+   is_in_jail = flag;
+}
+const bool & user::isCPU()
+{
+   return is_cpu;
+}
+
+const int & user::getCurrPos()
+{
+  return curr_pos;
+}
+
+void user::setCurrPos(int new_pos)
+{
+   curr_pos = new_pos;
 }
 
 void user::displayBalance()
@@ -113,7 +138,10 @@ void user::updateColorRent(vector<color*>& properties, bool flag)
 	for (int i = 0; i < properties.size(); ++i)
 	{
 		properties[i]->allColorRent(flag);
-		properties[i]->updateRent(true, true);
+		if(flag)
+		{
+		   properties[i]->updateRent(true, true);
+		}
 		
 	}
 }

@@ -719,13 +719,11 @@ LinkedUser* opening()
 
 	} while (repeat);
         
-	cerr << "Before\n";
-	user first = user(names[0]);
+	user first = user(names[0], 0, false);
 	LinkedUser* list = new LinkedUser(first);
-        cerr << "New\n";
 	for (int i = 1; i < names.size(); ++i)
 	{
-	        user ite = user(names[i]);
+	        user ite = user(names[i], 0, false);
 		list->addUser(ite);
 	}
 

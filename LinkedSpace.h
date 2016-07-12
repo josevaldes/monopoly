@@ -1,8 +1,3 @@
-#ifndef LINKED_USER_H
-#define LINKED_USER_H
-
-#include <string>
-#include "user.h"
 
 class Node
 {
@@ -37,7 +32,6 @@ public:
 	LinkedUser();
 	explicit LinkedUser(user);
 
-	//void eliminateFirst(LinkedUser*);
 	Node* getHead();
 	Node* getTail();
 	Node* getCurrent();
@@ -46,12 +40,9 @@ public:
 	void addUser(user);
 	bool removeUser(Node*);
 	void createCyclicList();
-	user* obtainUser(string name);
-	//void opening(LinkedUser*);
 	void clearList(LinkedUser*);
 	void displayList();
 };
 
 
 
-#endif

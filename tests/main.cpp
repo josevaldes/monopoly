@@ -152,10 +152,31 @@ int main()
 			{
 				if (currentPlayer->hasAnyProperty())
 				{
-					cerr << "Sell all your properties before declaring in bankrupt" << endl;
-					cerr << "Returning to Main Menu" << endl;
-					Custom_Clear();
-					continue;
+					cerr << "Do you want to sell or just return properties?\n";
+					getline(cin, respond);
+					while(respond[0] != 's' && respond[0] != 'S' && respond[0] != 'R' && respond[0] != 'r')
+					{
+                                           cerr << "Not valid response, please write again ";
+					   getline(cin, respond);
+					}
+                                        
+					if(respond[0] == 's' || respond[0] == 'S')
+					{
+					   cerr << "Sell all your properties before declaring in bankrupt" << endl;
+					   cerr << "Returning to Main Menu" << endl;
+					   Custom_Clear();
+					   continue;
+					}
+					
+					else
+					{
+                                           cerr << "Returning all your properties to the bank\n";
+					   returnAllProperties(*currentPlayer, DB);
+				           list->removeUser(list->getCurrent());
+					   Custom_Clear();
+					   continue;
+					}
+
 				}
 				else
 				    list->removeUser(list->getCurrent());

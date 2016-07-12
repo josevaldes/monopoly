@@ -46,3 +46,7 @@ testMortage: testMortageProperty.cpp menu_methods.cpp LinkedUser.cpp color.cpp p
 testReturnAll: testReturnAllProperties.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp
 	$(CC) $(CXXFLAGS) -o testReturnAll testReturnAllProperties.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
 	./testReturnAll
+
+testPropBoard: testPropBoard.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp Board.cpp 
+	$(CC) $(CXXFLAGS) -o testPropBoard testPropBoard.cpp Board.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
+	./testPropBoard

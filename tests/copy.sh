@@ -23,3 +23,5 @@ cp ../strings.h ./
 cp ../user.h ./
 cp ../user.cpp ./
 cp ../utility.h ./
+cp ../Board.h ./
+cp ../Board.cpp ./

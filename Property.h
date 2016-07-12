@@ -28,7 +28,7 @@ class Property
          name = "";
       }
 
-      ~Property() {}
+      virtual ~Property() {}
       
       virtual bool isOwned() const 
       {

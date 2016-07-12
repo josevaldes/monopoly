@@ -75,7 +75,7 @@ void color::updateRent(bool justCheck, bool buyT_sellF)
 	switch (houses)   
 	{
 	    case 0:
-			//rent = fullRent;  // If there is none, update the rent to full rent
+			rent = fullRent;  // If there is none, update the rent to full rent
 		    break;
 
 		case 1:

@@ -211,3 +211,28 @@ void toUpperString(string& str)
       str[i] = toupper(str[i]);
    }
 }
+
+bool yes_no_question()
+{
+   bool valid_ans = false;
+   bool response;
+   string ans;
+   
+   getline(cin, ans);
+   
+   while(!valid_ans)
+   {
+      if(ans[0] == 'y' || ans[0] == 'Y' || ans[0] == 'n' || ans[0] == 'N')
+      {
+         valid_ans = true;
+      }
+      else
+      {
+        cout << "Not a valid answer, please respond again\n";
+	getline(cin, ans); 
+      }
+   }
+
+   return (ans[0] == 'y' || ans[0] == 'Y');
+
+}

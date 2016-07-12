@@ -47,16 +47,21 @@ class user
 
 		vector<utility*> utilities;
 
+    int curr_pos;
+    bool is_cpu;
+    bool is_in_jail;
+
 
     public:
-		explicit user(string);   // Constructor
+		explicit user(string, int, bool);   // Constructor
 		user(); // Default constructor
 
 		~user()
     {
     } // Destructor
 
-		string getName() const       // Name accessor
+		
+    string getName() const       // Name accessor
 		{
 			return player;
 		}
@@ -73,7 +78,16 @@ class user
         
 		/* User Methods*/
 
-		void displayBalance(); // It displays the current balance, and properties in possesion
+		const bool & isJailed();
+    void setJailed(bool);
+
+    const bool & isCPU();
+
+    const int & getCurrPos();
+
+    void setCurrPos(int);
+
+    void displayBalance(); // It displays the current balance, and properties in possesion
 
 		void setDebt(bool);    // It mutates the status of the debt status
 

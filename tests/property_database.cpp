@@ -293,7 +293,7 @@ void property_database::returnColorProperty(color* colorProperty)
 	
 	if (colorIndex == 0 || colorIndex == 7)
 		numProperties = 2;
-        
+
 	for (int i = 0; i < numProperties; ++i)
 	{
 		if (colorProperty == colors[colorIndex][i])

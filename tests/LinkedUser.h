@@ -4,22 +4,21 @@
 #include <string>
 #include "user.h"
 
-
 class Node
 {
 	friend class LinkedUser;
 
 	private:
-	    user player;
+	  user player;
 		Node* next;
 		Node* prev;
 
     public:
 		Node();
-		explicit Node( user);
+		explicit Node(user);
 		
 		user* getUser();
-		void setUser( user);
+		void setUser(user);
 
 		Node* getNext();
 		void setNext(Node*);
@@ -36,7 +35,7 @@ private:
 	
 public:
 	LinkedUser();
-	explicit LinkedUser( user);
+	explicit LinkedUser(user);
 
 	//void eliminateFirst(LinkedUser*);
 	Node* getHead();
@@ -48,7 +47,7 @@ public:
 	bool removeUser(Node*);
 	void createCyclicList();
 	user* obtainUser(string name);
-	void opening(LinkedUser*);
+	//void opening(LinkedUser*);
 	void clearList(LinkedUser*);
 	void displayList();
 };

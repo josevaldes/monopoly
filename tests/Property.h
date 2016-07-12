@@ -16,11 +16,13 @@ class Property
    int mortage;
    string category;
    string name;
+   string owner;
 
    public:
       explicit Property(string n)
       {
          name = n;
+         owner = "";
       }
 
       Property()
@@ -28,13 +30,23 @@ class Property
          name = "";
       }
 
-      ~Property() {}
+      virtual ~Property() {}
       
       virtual bool isOwned() const 
       {
          return owned;
       }
       
+      virtual string getOwner() const
+      {
+         return owner;
+      }
+
+      virtual void setOwner(string new_owner)
+      {
+         owner = new_owner;
+      }
+
       virtual bool isMortaged() const
       {
          return mortaged;

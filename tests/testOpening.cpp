@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-	LinkedUser* list = opening();
+	LinkedUser<user>* list = opening();
 
 	list->displayList();
 	cerr <<"To be eliminated: "<< list->getTail()->getUser()->getName()<<endl;

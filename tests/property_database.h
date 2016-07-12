@@ -7,11 +7,17 @@
 #include "color.h"
 #include "railroad.h"
 #include "utility.h"
+#include "Board.h"
 
 using namespace std;
 
+
+
 class property_database
 {
+
+friend class Board;
+
 private:
 	    color* colors[8][3];
 	    railroad* rails[4];

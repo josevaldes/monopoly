@@ -23,4 +23,6 @@ void Custom_Clear();
 
 void toUpperString(string& str);
 
+bool yes_no_question();
+
 #endif //HELPING_METHODS_H

@@ -13,7 +13,7 @@ Node::Node()
 	prev = nullptr;
 }
 
-Node::Node( user temp)
+Node::Node(user temp)
 {
 	player = temp;
 	next = nullptr;
@@ -102,7 +102,7 @@ void LinkedUser::displayList()
 
 }
 
-void LinkedUser::addUser( user added)
+void LinkedUser::addUser(user added)
 {
 	Node* ite = head;
 	
