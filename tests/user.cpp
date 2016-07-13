@@ -10,6 +10,8 @@ user::user(string name, int startPt, bool cpu) :player(name), curr_pos(startPt),
 	currency = 1500;
 	inDebt = false;
 	is_in_jail = false;
+	chanceCard = false;
+	chestCard = false;
 }
 
 user::user()
@@ -17,6 +19,158 @@ user::user()
 	player = "";
 }
 
+int user::getNumHouses()
+{
+   int numHouses = 0;
+   for(int i = 0; i < purple.size(); ++i)
+   {
+     int houses = purple[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+   
+   for(int i = 0; i < sky.size(); ++i)
+   {
+     int houses = sky[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+   
+   for(int i = 0; i < magenta.size(); ++i)
+   {
+     int houses = magenta[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+
+   for(int i = 0; i < orange.size(); ++i)
+   {
+     int houses = orange[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+   
+   for(int i = 0; i < red.size(); ++i)
+   {
+     int houses = red[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+   for(int i = 0; i < yellow.size(); ++i)
+   {
+     int houses = yellow[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+   for(int i = 0; i < green.size(); ++i)
+   {
+     int houses = green[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+   for(int i = 0; i < blue.size(); ++i)
+   {
+     int houses = blue[i]->getHouses();
+     if(houses != 5)
+     {
+        numHouses += houses;
+     }
+   }
+
+   return numHouses;
+}
+
+int user::getNumHotels()
+{
+   int numHotels;
+   for(int i = 0; i < purple.size(); ++i)
+   {
+     int houses = purple[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+   
+   for(int i = 0; i < sky.size(); ++i)
+   {
+     int houses = sky[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+   
+   for(int i = 0; i < magenta.size(); ++i)
+   {
+     int houses = magenta[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+
+   for(int i = 0; i < orange.size(); ++i)
+   {
+     int houses = orange[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+
+   for(int i = 0; i < red.size(); ++i)
+   {
+     int houses = red[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+
+   for(int i = 0; i < yellow.size(); ++i)
+   {
+     int houses = yellow[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+
+   for(int i = 0; i < green.size(); ++i)
+   {
+     int houses = green[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+
+   for(int i = 0; i < blue.size(); ++i)
+   {
+     int houses = blue[i]->getHouses();
+     if(houses == 5)
+     {
+        ++numHotels;
+     }
+   }
+
+   return numHotels;
+}
 const bool & user::isJailed()
 {
    return is_in_jail;
@@ -26,6 +180,27 @@ void user::setJailed(bool flag)
 {
    is_in_jail = flag;
 }
+
+const bool & user::isChanceCard()
+{
+   return chanceCard;
+}
+
+void user::setChanceCard(bool flag)
+{
+   chanceCard = flag;
+}
+
+const bool & user::isChestCard()
+{
+   return chestCard;
+}
+
+void user::setChestCard(bool flag)
+{
+   chestCard = flag;
+}
+
 const bool & user::isCPU()
 {
    return is_cpu;

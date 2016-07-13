@@ -50,6 +50,8 @@ class user
     int curr_pos;
     bool is_cpu;
     bool is_in_jail;
+    bool chanceCard;
+    bool chestCard;
 
 
     public:
@@ -78,12 +80,21 @@ class user
         
 		/* User Methods*/
 
-		const bool & isJailed();
+		int getNumHouses();
+    int getNumHotels();
+
+    const bool & isJailed();
     void setJailed(bool);
 
     const bool & isCPU();
 
     const int & getCurrPos();
+
+		const bool & isChanceCard();
+    void setChanceCard(bool);
+		
+    const bool & isChestCard();
+    void setChestCard(bool);
 
     void setCurrPos(int);
 
@@ -93,7 +104,7 @@ class user
 
 		void updateColorRent(vector<color*>&, bool); // It updates the rent of a property without houses
 
-
+ 
 		void addCurrency(int money);     // It adds currency of the player
 
 		bool subtractCurrency(int money); // It subtract currency to the user if the user has enough currency

@@ -12,6 +12,8 @@
 #include "LinkedUser.h"
 
 #define NUM_SPACES 40
+#define CHEST_CARDS 16
+#define CHANCE_CARDS 15
 
 class Board;
 
@@ -29,6 +31,43 @@ class Space
       virtual void action(user* current){}
 };
 
+class Space_Community_Chest: public Space
+{
+  // typedef void (Space_Community_Chest CardActions) (user* a);
+
+   protected:
+      LinkedUser* users;
+      Space* gojailSpace;
+      bool isJailCard;
+      int currentCard;
+
+      vector<unsigned int> order;
+
+      void AdvanceToGo(user* current);
+      void BankError(user* current);
+      void DoctorFee(user* current);
+      void StockSale(user* current);
+      void GetOutJail(user* current);
+      void GoToJail(user* current);
+      void OperaNight(user* current);
+      void FundMatures(user* current);
+      void TaxRefund(user* current);
+      void LifeInsurance(user* current);
+      void HospitalFees(user* current);
+      void SchoolFees(user* current);
+      void ConsultancyFee(user* current);
+      void StreetRepairs(user* current);
+      void BeautyContest(user* current);
+      void Inheritance(user* current);
+
+   
+   public:
+      Space_Community_Chest(LinkedUser* players, Space* gojail);
+      void action(user* current);
+      void setJailCard(bool);
+      
+
+};
 class Space_Property : public Space
 {
    friend class Board;
@@ -62,9 +101,11 @@ class Space_Jail: public Space
 
    protected:
       map<user*, int> turns_left;
+      Space* chest_space;
+      Space* chance_space;
    
    public:
-      Space_Jail() {name = "Jail";}
+      Space_Jail();
       void action(user* current);
 };
 
@@ -83,7 +124,7 @@ class Space_Free_Parking: public Space
 {
    public:
       Space_Free_Parking() {name = "Free Parking";}
-      void action(user* current) {}
+      void action(user* current) {cout << "In " << name << endl;}
 };
 
 class Space_Go: public Space
@@ -115,6 +156,7 @@ public:
   Space* getSpace_Index(unsigned int);
   void test_1();
   void test_2();
+  void test_3();
 };
 
 
