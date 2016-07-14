@@ -52,15 +52,30 @@ void Space_Property::action(user* current)
       }
    }
 
-   if(this_property->isOwned() && current != owner)
+   else if(this_property->isOwned() && current != owner)
    {
       cout << "Paying rent to " << owner->getName() <<endl;
-      bool flag = current->subtractCurrency(this_property->getRent());
+      this_property->setChanceFlag(current->getChanceFlag());
+      
+      utility* prop = dynamic_cast<utility*>(this_property);
+      if(prop != NULL)
+      {
+         prop->setDice(dice);
+      }
+
+      int rent = this_property->getRent();
+      
+      bool flag = current->subtractCurrency(rent);
       current->setDebt(!flag);
       if(flag)
       {
-         owner->addCurrency(this_property->getRent());
+         owner->addCurrency(rent);
       }
+      else
+      {
+         //Future method
+      }
+      
    }
 
 }
@@ -88,26 +103,37 @@ void Space_Jail::action(user* current)
 {
    bool respond;
    
-   if(current->isChestCard())
+   if(!current->isJailed())
+   {
+      cout << current->getName() << " just visiting\n";
+      current->setJailed(false);
+      turns_left[current] = 0;
+   }
+
+   else if(current->isChestCard())
    {
       cout << "Do you want to use your community chest jail free card?\n";
       respond = yes_no_question();
       if(respond)
       {
          current->setChestCard(false);
-	 /*
-	 Space_Community_Chest* chest = dynamic_cast<Space_Community_Chest*>(chest_space);
-	 if(jail == NULL)
-	 {
-            cerr << "ERROR IN DYNAMIC CAST\n";
-	    exit(EXIT_FAILURE);
-	 }
-	 chest->setJailCard(true);
-	 */
 	 turns_left[current] = 0;
 	 current->setJailed(false);
       }
    }
+   
+   else if(current->isChanceCard())
+   {
+      cout << "Do you want to use your Chance jail free card?\n";
+      respond = yes_no_question();
+      if(respond)
+      {
+         current->setChanceCard(false);
+	 turns_left[current] = 0;
+	 current->setJailed(false);
+      }
+   }
+   
 
    if(current->isJailed() && turns_left[current] > 0)
    {
@@ -161,11 +187,7 @@ void Space_Jail::action(user* current)
       }
    }
 
-   else
-   {
-      cout << current->getName() << " just visiting\n";
-      current->setJailed(false);
-   }
+
 
 }
 
@@ -196,6 +218,274 @@ void Space_Go::action(user* current)
 {
    cout << "You Passed through GO. Collect $200\n";
    current->addCurrency(200);
+}
+
+Space_Chance::Space_Chance(LinkedUser* players, Space* goJail)
+{
+   name  = "Chance";
+   users = players;
+   gojailSpace = goJail;
+   isJailCard = true;
+   currentCard = 0;
+   order.resize(CHANCE_CARDS);
+   
+   
+   bool picked[CHANCE_CARDS];
+   for(unsigned int i = 0; i < CHANCE_CARDS; ++i)
+   {
+      picked[i] = false;
+   }
+
+   int chosen = rand() % CHANCE_CARDS;
+   for(unsigned int i = 0; i < CHANCE_CARDS; ++i)
+   {
+      while(picked[chosen])
+      {
+         chosen = rand() % CHANCE_CARDS;
+      }
+      
+      picked[chosen] = true;
+      order[i] = chosen;
+   }
+
+}
+
+void Space_Chance::setJailCard(bool flag)
+{
+   isJailCard = flag;
+}
+
+void Space_Chance::AdvanceToGo(user* current)
+{
+   cout << "Advance to Go and collect $200\n";
+   current->setCurrPos(0);
+}
+
+void Space_Chance::AdvanceToIllinois(user* current)
+{
+   cout << "Advance to Illinois Ave\n";
+   if(current->getCurrPos() == 36)
+   {
+     cout << "You passed through Go. Collect $200\n";
+     current->addCurrency(200);
+   }
+   current->setCurrPos(24);
+}
+
+void Space_Chance::AdvanceToCharles(user* current)
+{
+   cout << "Advance to St. Charles Place\n";
+   if(current->getCurrPos() == 22 || current->getCurrPos() == 36)
+   {
+     cout << "You passed through Go. Collect $200\n";
+     current->addCurrency(200);
+   }
+   current->setCurrPos(11);
+}
+
+void Space_Chance::AdvanceToUtility(user* current)
+{
+   cout << "Advance to nearest Utility. If unowned you may buy it.\n";
+   cout << "If owned, you must pay 10 times the value of current dice.\n";
+
+   if(current->getCurrPos() == 36)
+   {
+      cout << "You passed through Go. Collect $200\n";
+      current->addCurrency(200);
+      current->setCurrPos(12);
+   }
+   else if(current->getCurrPos() == 7)
+   {
+      current->setCurrPos(12);
+   }
+   else
+   {
+      current->setCurrPos(28);
+   }
+}
+
+void Space_Chance::AdvanceToRailroad(user* current)
+{
+   cout << "Advance to nearest Railroad. If unowned you may buy it.\n";
+   cout << "If owned, you must pay twice the value of current rent.\n";
+
+   if(current->getCurrPos() == 36)
+   {
+      cout << "You passed through Go. Collect $200\n";
+      current->addCurrency(200);
+      current->setCurrPos(5);
+   }
+   else if(current->getCurrPos() == 7)
+   {
+      current->setCurrPos(15);
+   }
+   else
+   {
+      current->setCurrPos(25);
+   }
+}
+
+void Space_Chance::Dividend(user* current)
+{
+   cout << "Bank pays you a dividend of $50\n";
+   current->addCurrency(50);
+}
+
+void Space_Chance::GetOutJail(user* current)
+{
+   cout << "Got a 'Get Out Of Jail Card'. Kept until needed or sold\n";
+   current->setChanceCard(true);
+   isJailCard = false;
+}
+
+void Space_Chance::GoBack(user* current)
+{
+   cout << "Go Back 3 spaces\n";
+   current->setCurrPos((current->getCurrPos() - 3) % NUM_SPACES);
+}
+
+void Space_Chance::GoToJail(user* current)
+{
+   cout << "Go to Jail.\n";
+   gojailSpace->action(current);
+}
+
+void Space_Chance::Repairs(user* current)
+{
+   cout << "Make general reparations on all your property. $25 per house, $100 per hotel.\n";
+   int repairCosts = (25 * current->getNumHouses()) + (100 * current->getNumHotels());
+   if(!current->subtractCurrency(repairCosts))
+   {
+      current->setDebt(true);
+      //future method
+   }
+}
+
+void Space_Chance::PoorTax(user* current)
+{
+   cout << "Pay a poor tax of $15\n";
+   if(!current->subtractCurrency(15))
+   {
+      current->setDebt(true);
+      //future method
+   }
+}
+
+void Space_Chance::TripReading(user* current)
+{
+   cout << "Take a trip to Reading Railroad\n";
+   cout << "You passed through Go. Collect $200\n";
+   current->addCurrency(200);
+   current->setCurrPos(5);
+   current->setChanceFlag(false);
+}
+
+void Space_Chance::ToBoardwalk(user* current)
+{
+   cout << "Take a walk on the Boardwalk\n";
+   current->setCurrPos(39);
+}
+
+void Space_Chance::Chairman(user* current)
+{
+   cout << "You have been elected Chairman of the Board. Pay $50 to each player\n";
+   users->nextCurrent();
+   user* ite = users->getCurrent()->getUser();
+   while(ite != current)
+   {
+      if(current->subtractCurrency(50))
+      {
+         ite->addCurrency(50);
+      }
+      else
+      {
+         current->setDebt(true);
+	 //future method
+      }
+      users->nextCurrent();
+      ite = users->getCurrent()->getUser();
+   }
+}
+
+void Space_Chance::LoanMatures(user* current)
+{
+   cout << "Your building and loan matures. Collect $150\n";
+   current->addCurrency(150);
+}
+
+void Space_Chance::action(user* current)
+{
+   current->setChanceFlag(true);
+
+   if(order[currentCard] == 6 && !isJailCard)
+   {
+       currentCard = (currentCard + 1) % CHANCE_CARDS;
+   }
+
+   switch(order[currentCard])
+   {
+       case 0:
+          AdvanceToGo(current);
+	  break;
+       
+       case 1:
+          AdvanceToIllinois(current);
+	  break;
+
+       case 2:
+          AdvanceToCharles(current);
+	  break;
+       
+       case 3:
+          AdvanceToUtility(current);
+	  break;
+       
+       case 4:
+          AdvanceToRailroad(current);
+	  break;
+       
+       case 5:
+          Dividend(current);
+	  break;
+
+       case 6:
+          GetOutJail(current);
+	  break;
+
+       case 7:
+          GoBack(current);
+	  break;
+
+       case 8:
+          GoToJail(current);
+	  break;
+	
+       case 9:
+          Repairs(current);
+	  break;
+       
+       case 10:
+          PoorTax(current);
+	  break;
+
+       case 11:
+          TripReading(current);
+	  break;
+       
+       case 12:
+          ToBoardwalk(current);
+	  break;
+
+       case 13:
+          Chairman(current);
+	  break;
+
+       case 14:
+          LoanMatures(current);
+	  break;
+   }
+
+   currentCard = (currentCard + 1) % CHANCE_CARDS;
 }
 
 Space_Community_Chest::Space_Community_Chest(LinkedUser* players, Space* goJail)
@@ -237,7 +527,6 @@ void Space_Community_Chest::AdvanceToGo(user* current)
 {
    cout << "Advance to Go and collect $200\n";
    current->setCurrPos(0);
-   current->addCurrency(200);
 }
 
 void Space_Community_Chest::BankError(user* current)
@@ -372,6 +661,7 @@ void Space_Community_Chest::action(user* current)
    {
        currentCard = (currentCard + 1) % CHEST_CARDS;
    }
+
    switch(order[currentCard])
    {
        case 0:
@@ -458,7 +748,7 @@ Board::Board()
    board[4]  = new Space_Income_Tax();
    board[5]  = new Space_Property(DB->rails[0]);
    board[6]  = new Space_Property(DB->colors[1][0]);
-   board[7]  = new Space_Free_Parking();
+   board[7]  = new Space_Chance(players, board[30]);
    board[8]  = new Space_Property(DB->colors[1][1]); 
    board[9]  = new Space_Property(DB->colors[1][2]); 
 
@@ -473,7 +763,7 @@ Board::Board()
    board[19] = new Space_Property(DB->colors[3][2]); 
    board[20] = new Space_Free_Parking();
    board[21] = new Space_Property(DB->colors[4][0]); 
-   board[22] = new Space_Free_Parking(); 
+   board[22] = board[7]; 
    board[23] = new Space_Property(DB->colors[4][1]); 
    board[24] = new Space_Property(DB->colors[4][2]); 
    board[25] = new Space_Property(DB->rails[2]); 
@@ -487,17 +777,17 @@ Board::Board()
    board[33] = board[2]; 
    board[34] = new Space_Property(DB->colors[6][2]); 
    board[35] = new Space_Property(DB->rails[3]); 
-   board[36] = new Space_Free_Parking(); 
+   board[36] = board[7]; 
    board[37] = new Space_Property(DB->colors[7][0]); 
    board[38] = new Space_Luxury_Tax();
-   board[39] = new Space_Property(DB->colors[7][2]); 
+   board[39] = new Space_Property(DB->colors[7][1]); 
 }
 
 Board::~Board()
 {
    for(unsigned int i = 0; i < board.size(); ++i)
    {
-      if(i != 17 && i != 33)
+      if(i != 17 && i!= 22 && i != 33 && i != 36)
       {
          delete board[i];
       }
@@ -615,18 +905,23 @@ void Board::test_3()
    int index;
    string str;
    do
-   {
+   { 
+      bool flag_1 = curr_player->isChestCard();
+      bool flag_2 = curr_player->isChanceCard();
 
-
-      bool flag = curr_player->isChestCard();
       if(curr_player->isJailed())
       {
          board[10]->action(curr_player);
       }
       
-      if(flag && !curr_player->isChestCard())
+      if(flag_1 && !curr_player->isChestCard())
       {
          dynamic_cast<Space_Community_Chest*>(board[2])->setJailCard(true);
+      }
+
+      if(flag_2 && !curr_player->isChanceCard())
+      {
+        // dynamic_cast<Space_Chest*>(board[2])->setJailCard(true);   
       }
 
       if(!curr_player->isJailed())
@@ -637,11 +932,30 @@ void Board::test_3()
          index = strToInt(str) % NUM_SPACES;
          
 	 curr_player->setCurrPos(index);
+	 int new_pos = curr_player->getCurrPos();
 	 cerr << "In " << board[curr_player->getCurrPos()]->getName() << endl;
+	 
+	 board[curr_player->getCurrPos()]->setDice(index);
 	 board[curr_player->getCurrPos()]->action(curr_player);
+	 
+	 if(curr_player->getCurrPos() != new_pos && curr_player->getCurrPos() != 10)
+	 {
+	    cerr << "In " << board[curr_player->getCurrPos()]->getName() << endl;
+	    board[curr_player->getCurrPos()]->setDice(index);
+	    board[curr_player->getCurrPos()]->action(curr_player);
+	 }
+	 curr_player->setChanceFlag(false);
       }
       
       curr_player->displayBalance();
+
+      cout << "Do you want to change player?\n";
+      if(yes_no_question())
+      {
+         players->nextCurrent();
+	 curr_player = players->getCurrent()->getUser();
+      }
+
       cout << "Do you want to continue\n";
    }while(yes_no_question());
 

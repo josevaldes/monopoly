@@ -23,12 +23,14 @@ class Space
 
    protected:
       string name;
+      int dice;
 
    public:
-      Space() {}
+      Space() {name = "Space";}
       virtual ~Space(){}
       virtual string getName() { return name; }
       virtual void action(user* current){}
+      virtual void setDice(int d) { dice = d;}
 };
 
 class Space_Community_Chest: public Space
@@ -68,6 +70,39 @@ class Space_Community_Chest: public Space
       
 
 };
+
+class Space_Chance : public Space
+{
+   protected:
+      LinkedUser* users;
+      Space* gojailSpace;
+      bool isJailCard;
+      int currentCard;
+
+      vector<unsigned int> order;
+
+      void AdvanceToGo(user* current);
+      void AdvanceToIllinois(user* current);
+      void AdvanceToCharles(user* current);
+      void AdvanceToUtility(user* current);
+      void AdvanceToRailroad(user* current);
+      void Dividend(user* current);
+      void GetOutJail(user* current);
+      void GoBack(user* current);
+      void GoToJail(user* current);
+      void Repairs(user* current);
+      void PoorTax(user* current);
+      void TripReading(user* current);
+      void ToBoardwalk(user* current);
+      void Chairman(user* current);
+      void LoanMatures(user* current);
+   
+   public:
+      Space_Chance(LinkedUser* players, Space* gojail);
+      void action(user* current);
+      void setJailCard(bool);
+};
+
 class Space_Property : public Space
 {
    friend class Board;

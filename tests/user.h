@@ -52,6 +52,7 @@ class user
     bool is_in_jail;
     bool chanceCard;
     bool chestCard;
+    bool chanceFlag;
 
 
     public:
@@ -63,6 +64,16 @@ class user
     } // Destructor
 
 		
+    void setChanceFlag(bool flag)
+    {
+       chanceFlag = flag;
+    }
+
+    bool getChanceFlag()
+    {
+       return chanceFlag;
+    }
+
     string getName() const       // Name accessor
 		{
 			return player;
