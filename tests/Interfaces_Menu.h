@@ -2,10 +2,10 @@
 #define INTERFACES_MENUS_H
 
 #include <string>
-#include "LinkedUser.h"
+#include "user.h"
 #include "helping_methods.h"
 
-int Main_Menu(LinkedUser*);
+int Actions_Menu(user*, string);
 int Transaction_Menu();
 int buy_sell_transactions_menu();
 int pure_cash_transactions_menu();

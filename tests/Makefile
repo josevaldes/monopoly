@@ -47,6 +47,6 @@ testReturnAll: testReturnAllProperties.cpp menu_methods.cpp LinkedUser.cpp color
 	$(CC) $(CXXFLAGS) -o testReturnAll testReturnAllProperties.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
 	./testReturnAll
 
-testPropBoard: testPropBoard.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp Board.cpp 
-	$(CC) $(CXXFLAGS) -o testPropBoard testPropBoard.cpp Board.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
+testPropBoard: testPropBoard.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp Board.cpp Interfaces_Menu.cpp 
+	$(CC) $(CXXFLAGS) -o testPropBoard testPropBoard.cpp Interfaces_Menu.cpp Board.cpp menu_methods.cpp LinkedUser.cpp color.cpp property_database.cpp helping_methods.cpp clrscreen_linux.cpp user.cpp $(CFLAGS)
 	./testPropBoard

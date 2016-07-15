@@ -11,7 +11,7 @@ using namespace std;
 int main()
 {
 	property_database DB;
-	user player("Starker");
+	user player("Starker", 3, false);
 
 	cout << player.getName() << endl;
 	cout << player.getCurrency() << endl;

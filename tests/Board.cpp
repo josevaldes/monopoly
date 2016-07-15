@@ -1,5 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
+#include <assert.h>
+#include "strings.h"
 #include "Board.h"
 #include "user.h"
 #include "helping_methods.h" 
@@ -12,15 +14,20 @@ Space_Property::Space_Property(Property* init)
 {
    this_property = init; 
    name = this_property->getName();
+   owner = nullptr;
 }
 
 void Space_Property::action(user* current)
 {
+   cout << "In " << name << endl;
    bool answer = false;
 
    if(!current->isCPU())
-   {
-      if(!this_property->isOwned())
+   {  
+      string n = owner == nullptr? "UNOWNED" : "OWNED";
+      cout << n << endl;
+
+      if(owner == nullptr)
       {
          cout << "Do you want to buy " << this_property->getName() << endl;
          answer = yes_no_question(); 
@@ -30,7 +37,6 @@ void Space_Property::action(user* current)
    if(answer && !this_property->isOwned() && current->subtractCurrency(this_property->getCost()))
    {
       this_property->setOwned(true);
-      //this_property->setOwner(current->getName());
       owner = current;
 
       color* color_prop = dynamic_cast<color*>(this_property);
@@ -66,14 +72,16 @@ void Space_Property::action(user* current)
       int rent = this_property->getRent();
       
       bool flag = current->subtractCurrency(rent);
-      current->setDebt(!flag);
+      
       if(flag)
       {
          owner->addCurrency(rent);
       }
       else
       {
-         //Future method
+         current->setDebt(true);
+	 current->setDebter(owner);
+	 current->setDebtCost(rent);	 
       }
       
    }
@@ -82,14 +90,24 @@ void Space_Property::action(user* current)
 
 void Space_Luxury_Tax::action(user* current)
 {
+    cout << "In " << name << endl;
     bool flag = current->subtractCurrency(75);
-    current->setDebt(!flag);
+    if(!flag)
+    {
+       current->setDebt(true);
+       current->setDebtCost(75);
+    }
 }
 
 void Space_Income_Tax::action(user* current)
 {
+    cout << "In " << name << endl;
     bool flag = current->subtractCurrency(200);
-    current->setDebt(!flag);
+    if(!flag)
+    {
+       current->setDebt(true);
+       current->setDebtCost(200);
+    }
 }
 
 Space_Jail::Space_Jail()
@@ -108,6 +126,11 @@ void Space_Jail::action(user* current)
       cout << current->getName() << " just visiting\n";
       current->setJailed(false);
       turns_left[current] = 0;
+   }
+   
+   else if(turns_left[current] == 0)
+   {
+      current->setJailed(false);
    }
 
    else if(current->isChestCard())
@@ -200,6 +223,7 @@ Space_Go_Jail::Space_Go_Jail(unsigned int index, Space* space)
 
 void Space_Go_Jail::action(user* current)
 {
+   cout << "In " << name << endl;
    current->setJailed(true);
    current->setCurrPos(jail_index);
    Space_Jail* jail = dynamic_cast<Space_Jail*>(jail_space);
@@ -357,6 +381,7 @@ void Space_Chance::Repairs(user* current)
    if(!current->subtractCurrency(repairCosts))
    {
       current->setDebt(true);
+      current->setDebtCost(repairCosts);
       //future method
    }
 }
@@ -367,6 +392,7 @@ void Space_Chance::PoorTax(user* current)
    if(!current->subtractCurrency(15))
    {
       current->setDebt(true);
+      current->setDebtCost(15);
       //future method
    }
 }
@@ -400,6 +426,13 @@ void Space_Chance::Chairman(user* current)
       else
       {
          current->setDebt(true);
+	 current->setDebter(ite);
+	 current->setDebtCost(50);
+	 if(Menu(current, users, true, true)) 
+	 {
+            current->inBankrupt();
+	    break;
+	 }
 	 //future method
       }
       users->nextCurrent();
@@ -415,6 +448,7 @@ void Space_Chance::LoanMatures(user* current)
 
 void Space_Chance::action(user* current)
 {
+   cout << "In " << name << endl;
    current->setChanceFlag(true);
 
    if(order[currentCard] == 6 && !isJailCard)
@@ -541,6 +575,7 @@ void Space_Community_Chest::DoctorFee(user* current)
    if(!current->subtractCurrency(50))
    {
       current->setDebt(true);
+      current->setDebtCost(50);
       //future method
    }
 }
@@ -579,6 +614,13 @@ void Space_Community_Chest::OperaNight(user* current)
       else
       {
          ite->setDebt(true);
+	 ite->setDebter(current);
+	 ite->setDebtCost(50);
+	 if(Menu(ite, users, true, true)) //Last param doesn't matter when 3rd is true
+	 {
+            ite->inBankrupt();
+	    break;
+	 }
 	 //future method
       }
       users->nextCurrent();
@@ -612,6 +654,7 @@ void Space_Community_Chest::HospitalFees(user* current)
    if(!current->subtractCurrency(100))
    {
       current->setDebt(true);
+      current->setDebtCost(100);
       //future method
    }
 }
@@ -622,6 +665,7 @@ void Space_Community_Chest::SchoolFees(user* current)
    if(!current->subtractCurrency(150))
    {
       current->setDebt(true);
+      current->setDebtCost(150);
       //future method
    }
 }
@@ -639,6 +683,7 @@ void Space_Community_Chest::StreetRepairs(user* current)
    if(!current->subtractCurrency(repairCosts))
    {
       current->setDebt(true);
+      current->setDebtCost(repairCosts);
       //future method
    }
 }
@@ -657,6 +702,8 @@ void Space_Community_Chest::Inheritance(user* current)
 
 void Space_Community_Chest::action(user* current)
 {
+   cout << "In " << name << endl;
+
    if(order[currentCard] == 4 && !isJailCard)
    {
        currentCard = (currentCard + 1) % CHEST_CARDS;
@@ -738,6 +785,7 @@ Board::Board()
    curr_player = players->getCurrent()->getUser();
    DB = new property_database();
    
+   
    board.resize(NUM_SPACES);
    board[0]  = new Space_Go();
    board[1]  = new Space_Property(DB->colors[0][0]);
@@ -771,7 +819,6 @@ Board::Board()
    board[27] = new Space_Property(DB->colors[5][1]); 
    board[28] = new Space_Property(DB->utilities[1]); 
    board[29] = new Space_Property(DB->colors[5][2]); 
-
    board[31] = new Space_Property(DB->colors[6][0]); 
    board[32] = new Space_Property(DB->colors[6][1]); 
    board[33] = board[2]; 
@@ -781,7 +828,38 @@ Board::Board()
    board[37] = new Space_Property(DB->colors[7][0]); 
    board[38] = new Space_Luxury_Tax();
    board[39] = new Space_Property(DB->colors[7][1]); 
+
+   prop_map[DB->colors[0][0]] = board[1];
+   prop_map[DB->colors[0][1]] = board[3];
+   prop_map[DB->rails[0]]     = board[5];
+   prop_map[DB->colors[1][0]] = board[6];
+   prop_map[DB->colors[1][1]] = board[8];
+   prop_map[DB->colors[1][2]] = board[9];
+   prop_map[DB->colors[2][0]] = board[11];
+   prop_map[DB->colors[2][1]] = board[13];
+   prop_map[DB->colors[2][2]] = board[14];
+   prop_map[DB->colors[3][0]] = board[16];
+   prop_map[DB->colors[3][1]] = board[18];
+   prop_map[DB->colors[3][2]] = board[19];
+   prop_map[DB->colors[4][0]] = board[21];
+   prop_map[DB->colors[4][1]] = board[23];
+   prop_map[DB->colors[4][2]] = board[24];
+   prop_map[DB->colors[5][0]] = board[26];
+   prop_map[DB->colors[5][1]] = board[27];
+   prop_map[DB->colors[5][2]] = board[29];
+   prop_map[DB->colors[6][0]] = board[31];
+   prop_map[DB->colors[6][1]] = board[32];
+   prop_map[DB->colors[6][2]] = board[34];
+   prop_map[DB->colors[7][0]] = board[37];
+   prop_map[DB->colors[7][1]] = board[39];
+   prop_map[DB->rails[1]]     = board[15];
+   prop_map[DB->rails[2]]     = board[25];
+   prop_map[DB->rails[3]]     = board[35];
+   prop_map[DB->utilities[0]] = board[12];
+   prop_map[DB->utilities[1]] = board[28];
+
 }
+
 
 Board::~Board()
 {
@@ -796,6 +874,78 @@ Board::~Board()
    delete DB;
    delete players;
 }
+
+void Board::updateProp()
+{
+   user* ite = players->getCurrent()->getUser();
+   do
+   {
+    if(ite->recentlyFlag)
+    {
+       while(!ite->recently.empty())
+       {
+          Space_Property* prop = dynamic_cast<Space_Property*>(prop_map[ite->recently.front()]);
+          assert(prop != NULL);
+          prop->owner = ite;
+          ite->recently.pop();
+       }
+
+       ite->recentlyFlag = false;
+    }
+
+    players->nextCurrent();
+    ite = players->getCurrent()->getUser();
+   } while(ite != curr_player);
+
+}
+
+void Board::returnAllProperties()
+{
+   user* current = curr_player;
+   vector<color*> colorTemp;
+   vector<railroad*> railTemp;
+   vector<utility*> utilityTemp;
+
+   string currentColor[] = { PURPLE, SKY, MAGENTA, ORANGE, RED, YELLOW, GREEN, BLUE };
+
+   for (int i = 0; i < 8; ++i)
+   {
+      colorTemp = current->getColorProperties(currentColor[i]);
+
+      for (int j = 0; j < colorTemp.size(); ++j)
+      {
+         colorTemp[j]->setMortage(false);
+	 colorTemp[j]->setOwned(false);
+	 current->removeColorProperty(colorTemp[j]);
+	 Space_Property* prop_space = dynamic_cast<Space_Property*>(prop_map[colorTemp[j]]);
+	 assert(prop_space != NULL);
+	 prop_space->owner = nullptr;
+      }
+   }
+
+   railTemp = current->getRailroadProperties();
+   for (int i = 0; i < railTemp.size(); ++i)
+   {
+      railTemp[i]->setMortage(false);
+      railTemp[i]->setOwned(false);
+      current->removeRailroadProperty(railTemp[i]);
+      Space_Property* prop_space = dynamic_cast<Space_Property*>(prop_map[railTemp[i]]);
+      assert(prop_space != NULL); 
+      prop_space->owner = nullptr;
+   }
+
+   utilityTemp = current->getUtilityProperties();
+   for (int i = 0; i < utilityTemp.size(); ++i)
+   {
+      utilityTemp[i]->setMortage(false);
+      utilityTemp[i]->setOwned(false);
+      current->removeUtilityProperty(utilityTemp[i]);
+      Space_Property* prop_space = dynamic_cast<Space_Property*>(prop_map[utilityTemp[i]]);
+      assert(prop_space != NULL); 
+      prop_space->owner = nullptr;
+   }
+}
+
 
 
 unsigned int Board::moveSpace(int steps, int curr)
@@ -852,7 +1002,30 @@ Space* Board::getSpace_Index(unsigned int index)
 {
    return board[index];
 }
+bool Board::isBankrupt()
+{
+   updateProp();
+   if(curr_player->inDebt && !curr_player->bankrupt)
+   {
+      if(Menu(curr_player, players, true, true)) // Last parameter doesn't matter
+      {
+         curr_player->inBankrupt();
+	 updateProp();
+      }
+   }
 
+   if(curr_player->bankrupt)
+   {
+       returnAllProperties();
+       players->removeUser(players->getCurrent());
+       curr_player = players->getCurrent()->getUser();
+       return true;
+   }
+   else
+   {
+      return false;
+   }
+}
 void Board::test_1()
 {
    int index = 3;
@@ -904,6 +1077,7 @@ void Board::test_3()
 {
    int index;
    string str;
+   curr_player->subtractCurrency(1400);
    do
    { 
       bool flag_1 = curr_player->isChestCard();
@@ -921,13 +1095,20 @@ void Board::test_3()
 
       if(flag_2 && !curr_player->isChanceCard())
       {
-        // dynamic_cast<Space_Chest*>(board[2])->setJailCard(true);   
+         dynamic_cast<Space_Chance*>(board[7])->setJailCard(true);   
       }
 
       if(!curr_player->isJailed())
       {
       //   moveSpace(moves[index], curr_player->getCurrPos());
-         cout << "Where you want to go\n";
+         cout << "Do you want to buy?\n";
+	 if(yes_no_question())
+	 {
+            buySellProperty(curr_player, players);
+	    updateProp();
+	 }
+
+	 cout << "Where you want to go\n";
          getline(cin, str);
          index = strToInt(str) % NUM_SPACES;
          
@@ -937,7 +1118,12 @@ void Board::test_3()
 	 
 	 board[curr_player->getCurrPos()]->setDice(index);
 	 board[curr_player->getCurrPos()]->action(curr_player);
-	 
+
+         if(isBankrupt())
+	 {
+            continue;
+	 }
+
 	 if(curr_player->getCurrPos() != new_pos && curr_player->getCurrPos() != 10)
 	 {
 	    cerr << "In " << board[curr_player->getCurrPos()]->getName() << endl;
@@ -945,6 +1131,11 @@ void Board::test_3()
 	    board[curr_player->getCurrPos()]->action(curr_player);
 	 }
 	 curr_player->setChanceFlag(false);
+
+         if(isBankrupt())
+	 {
+            continue;
+	 }
       }
       
       curr_player->displayBalance();
@@ -958,5 +1149,120 @@ void Board::test_3()
 
       cout << "Do you want to continue\n";
    }while(yes_no_question());
+}
 
+
+void Board::start_game()
+{
+   int doubles = 0;
+   while(players->getCurrent() != players->getCurrent()->getNext())
+   {
+      ClearScreen();
+      int dice_1;
+      int dice_2;
+      bool dice_throwed = false;
+
+      bool flag_1 = curr_player->isChestCard();
+      bool flag_2 = curr_player->isChanceCard();
+
+      if(curr_player->isJailed())
+      {
+         board[10]->action(curr_player);
+      }
+      
+      if(flag_1 && !curr_player->isChestCard())
+      {
+         dynamic_cast<Space_Community_Chest*>(board[2])->setJailCard(true);
+      }
+
+      if(flag_2 && !curr_player->isChanceCard())
+      {
+         dynamic_cast<Space_Chance*>(board[7])->setJailCard(true);   
+      }
+      
+      if(Menu(curr_player, players, false, false))
+      {
+         curr_player->bankrupt = true;
+      }
+
+      if(isBankrupt())
+      {
+	 continue;
+      }
+
+      if(!curr_player->isJailed())
+      {
+         dice_1 = (rand() % 6) + 1;
+         dice_2 = (rand() % 6) + 1;
+	 /*
+	 string ans;
+	 cout << "Getting dice 1\n";
+	 getline(cin, ans);
+	 dice_1 = strToInt(ans);
+	 cout << "Getting dice 2\n";
+	 getline(cin, ans);
+	 dice_2 = strToInt(ans);
+         */
+	 int move   = dice_1 + dice_2;
+         dice_throwed = true;
+
+	 cout << "Dice 1: " << dice_1 << endl;
+	 cout << "Dice 2: " << dice_2 << endl;
+       
+         doubles = dice_1 == dice_2 ? (doubles + 1) : doubles;
+	 if(doubles == 3)
+	 {
+            string ans;
+	    board[30]->action(curr_player);
+            players->nextCurrent();
+	    curr_player = players->getCurrent()->getUser();
+	    doubles = 0;
+	    cout << "Going to next turn\n";
+	    getline(cin, ans);
+	    continue;
+	 }
+	 unsigned int position = moveSpace(move, curr_player->getCurrPos());
+
+	 board[curr_player->getCurrPos()]->setDice(move);
+	 board[curr_player->getCurrPos()]->action(curr_player);
+
+         if(isBankrupt())
+	 {
+            continue;
+	 }
+
+	 if(curr_player->getCurrPos() != position && curr_player->getCurrPos() != 10)
+	 {
+	    board[curr_player->getCurrPos()]->setDice(move);
+	    board[curr_player->getCurrPos()]->action(curr_player);
+	 }
+	 curr_player->setChanceFlag(false);
+
+         if(isBankrupt())
+	 {
+            continue;
+	 }
+
+	 if(Menu(curr_player, players, false, true))
+	 {
+            curr_player->bankrupt = true;
+	 }
+
+	 if(isBankrupt())
+	 {
+            continue;
+	 }
+      }
+
+      if((curr_player->isJailed() || dice_throwed) && (dice_1 != dice_2))
+      {
+         players->nextCurrent();
+	 curr_player = players->getCurrent()->getUser();
+	 doubles = 0;
+      }
+
+   }
+
+   cout << "Congratulations to " << curr_player->getName() <<endl;
+   cout << "You won\n";
 }

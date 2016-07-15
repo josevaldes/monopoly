@@ -2,12 +2,14 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <assert.h>
 #include "strings.h"
 #include "menu_methods.h"
 #include "color.h"
 #include "railroad.h"
 #include "utility.h"
 #include "helping_methods.h"
+#include "Interfaces_Menu.h"
 
 using namespace std;
 
@@ -71,7 +73,35 @@ void buyPropertyToBank(user & buyer, property_database & DB)
 	}
 }
 
-void buyPropertyToPlayer(user & buyer, user & seller)
+void buySellProperty(user* current, LinkedUser* players)
+{
+   bool flag = Are_You_Buyer();
+   string name;
+   user* other;
+   cout << "Who is the other player? Here is a list of them: ";
+   players->displayList();
+   getline(cin, name);
+   
+   other = players->obtainUser(name);
+
+   while(other == nullptr)
+   {
+      cerr << "Please write the exact name\n";
+      getline(cin, name);
+      other = players->obtainUser(name);
+   }
+
+   if(flag)
+   {
+      buyPropertyToPlayer(current, other);
+   }
+   else
+   {
+      buyPropertyToPlayer(other, current);
+   }
+}
+
+void buyPropertyToPlayer(user* buyer, user* seller)
 {
 	int sellerPrice;
 	int category = getCategory();
@@ -90,7 +120,7 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 		cout << "Select the color of the property you want to buy" << endl;
 		getline(cin, colorName);
                 toUpperString(colorName);
-		colorSelected = seller.getColorProperty(colorName);
+		colorSelected = seller->getColorProperty(colorName);
 		
 		if (colorSelected == nullptr)
 		{
@@ -114,11 +144,12 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 
 			if (ans[0] == 'Y' || ans[0] == 'y')
 			{
-				if (buyer.subtractCurrency(sellerPrice))
+				if (buyer->subtractCurrency(sellerPrice))
 				{
-					buyer.addColorProperty(colorSelected);
-					seller.removeColorProperty(colorSelected);
-					seller.addCurrency(sellerPrice);
+					buyer->addColorProperty(colorSelected);
+					seller->removeColorProperty(colorSelected);
+					seller->addCurrency(sellerPrice);
+                                        buyer->addRecently(colorSelected);
 				}
 
 				confirmation = true;
@@ -139,7 +170,7 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 		
 		break;
 	case 2:
-		railSelected = seller.getRailroadProperty();
+		railSelected = seller->getRailroadProperty();
 
 		if (railSelected  == nullptr)
 		{
@@ -163,11 +194,12 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 
 			if (ans[0] == 'Y' || ans[0] == 'y')
 			{
-				if (buyer.subtractCurrency(sellerPrice))
+				if (buyer->subtractCurrency(sellerPrice))
 				{
-					buyer.addRailroadProperty(railSelected);
-					seller.removeRailroadProperty(railSelected);
-					seller.addCurrency(sellerPrice);
+					buyer->addRailroadProperty(railSelected);
+					seller->removeRailroadProperty(railSelected);
+					seller->addCurrency(sellerPrice);
+				        buyer->addRecently(railSelected);
 				}
 				
 				confirmation = true;
@@ -189,7 +221,7 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 		break;
 
 	case 3:
-		utilitySelected = seller.getUtilityProperty();
+		utilitySelected = seller->getUtilityProperty();
 
 		if (utilitySelected == nullptr)
 		{
@@ -213,11 +245,12 @@ void buyPropertyToPlayer(user & buyer, user & seller)
 
 			if (ans[0] == 'Y' || ans[0] == 'y')
 			{
-				if (buyer.subtractCurrency(sellerPrice))
+				if (buyer->subtractCurrency(sellerPrice))
 				{
-					buyer.addUtilityProperty(utilitySelected);
-					seller.removeUtilityProperty(utilitySelected);
-					seller.addCurrency(sellerPrice);
+					buyer->addUtilityProperty(utilitySelected);
+					seller->removeUtilityProperty(utilitySelected);
+					seller->addCurrency(sellerPrice);
+					buyer->addRecently(utilitySelected);
 				}
 				
 				confirmation = true;
@@ -734,7 +767,7 @@ LinkedUser* opening()
 	return list;
 }
 
-void returnAllProperties(user & current, property_database & DB)
+void returnAllProperties(user & current)
 {
 	vector<color*> colorTemp;
 	vector<railroad*> railTemp;
@@ -748,7 +781,9 @@ void returnAllProperties(user & current, property_database & DB)
 		
 		for (int j = 0; j < colorTemp.size(); ++j)
 		{
-			DB.returnColorProperty(colorTemp[j]);
+			colorTemp[j]->setMortage(false);
+                        colorTemp[j]->setOwned(false);
+			//Setting space to no owner
 			current.removeColorProperty(colorTemp[j]);
 		}
 	}
@@ -756,14 +791,119 @@ void returnAllProperties(user & current, property_database & DB)
 	railTemp = current.getRailroadProperties();
 	for (int i = 0; i < railTemp.size(); ++i)
 	{
-		DB.returnRailroadProperty(railTemp[i]);
+		railTemp[i]->setMortage(false);
+		railTemp[i]->setOwned(false);
+		//Set space to no owner
 		current.removeRailroadProperty(railTemp[i]);
 	}
 
 	utilityTemp = current.getUtilityProperties();
 	for (int i = 0; i < utilityTemp.size(); ++i)
 	{
-		DB.returnUtilityProperty(utilityTemp[i]);
+		utilityTemp[i]->setMortage(false);
+		utilityTemp[i]->setOwned(false);
+		//Set space to no owner
 		current.removeUtilityProperty(utilityTemp[i]);
 	}
+}
+
+
+bool Menu(user* current, LinkedUser* players, bool debtFlag, bool isSecondRound)
+{
+   bool working = true;
+   bool bankrupcy = false;
+   int debt = current->getDebt();
+   string debter_name;
+   user* debter;
+   if(debtFlag)
+   {
+      debter = current->getDebter();
+      if(debter == nullptr)
+      {
+         debter_name = "Bank";
+      }
+      else
+      {
+         debter_name = debter->getName();
+      }
+   }
+
+   while(working)
+   {
+      int opt;
+      if(debtFlag)
+      {
+         cout << "You own " << "$" << current->getDebt() << " to " << debter_name << endl;
+         opt = Actions_Menu(current, "Pay your debt");
+      }
+      else if(!isSecondRound && !current->isJailed())
+      {
+         opt = Actions_Menu(current, "Throw dice");
+      }
+      else
+      {
+         opt = Actions_Menu(current, "Go to next turn");
+      }
+
+      ClearScreen();
+      switch(opt)
+      {
+         case 1:
+	    current->displayBalance();
+	    Custom_Clear();
+	    break;
+	 
+	 case 2:
+	    opt = buy_sell_transactions_menu();
+	    switch(opt)
+	    {
+               case 1:
+	          buySellProperty(current, players);
+		  break;
+	       
+	       case 2:
+	          buySellHouses(*current);
+		  break;
+	       
+	       case 3:
+	          mortageProperty(*current);
+		  break;
+	    }
+	    break;
+
+	 case 3:
+
+	   if(debtFlag)
+	   {
+	      if(current->subtractCurrency(debt))
+	      {
+                 current->setDebt(false);
+	         current->setDebter(nullptr);
+	         current->setDebtCost(0);
+
+	         if(debter != nullptr)
+	         {
+                    debter->addCurrency(debt);
+	         }
+		 working = false;
+	      }
+	   }
+	   else
+	   {
+	      working = false;
+	   }
+	   break;
+	
+	case 4:
+	   cout << "Are you sure you want to declare in bankrupt?\n";
+	   if(yes_no_question())
+	   {
+              cout << "Returning all Properties\n";
+              bankrupcy = true;
+	      working = false;
+	   }
+	   break;	   
+      }
+   }
+   return bankrupcy;
 }

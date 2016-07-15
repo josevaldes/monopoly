@@ -12,7 +12,7 @@ int main()
 {
   srand(time(NULL));
   Board board;
-  board.test_3();
+  board.start_game();
   /*
    LinkedUser* players = opening();
    Board board;

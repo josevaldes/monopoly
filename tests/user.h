@@ -8,6 +8,8 @@
 
 #include <string>
 #include <vector>
+#include <queue>
+#include "Property.h"
 #include "color.h"
 #include "railroad.h"
 #include "utility.h"
@@ -16,6 +18,8 @@ using namespace std;
 
 class user
 {
+    friend class Board;
+    
     private:
 		bool allPurple;
 		bool allSky;
@@ -28,11 +32,15 @@ class user
 		
 		bool inDebt; // Boolean that will indicate if the user is in debt with
 		             // someone else
+    bool recentlyFlag;
+
+    bool bankrupt;
 		
 		int currency; // The ammount of currency that the player has
 		
 		string player; // The name of the player
 		
+    queue<Property*> recently;
 		// Vectors that will be storing the properties of the user
 		vector<color*> purple;  
 		vector<color*> sky;
@@ -54,6 +62,8 @@ class user
     bool chestCard;
     bool chanceFlag;
 
+    int debt;
+    user* debter;
 
     public:
 		explicit user(string, int, bool);   // Constructor
@@ -63,7 +73,41 @@ class user
     {
     } // Destructor
 
-		
+    
+    
+    void inBankrupt()
+    {
+       bankrupt = true;
+    }
+
+    void addRecently(Property* prop)
+    {
+       recently.push(prop);
+       recentlyFlag = true;
+    }
+    
+ 
+		int getDebt()
+    {
+       return debt;
+    }
+
+    void setDebtCost(int d)
+    {
+       debt = d;
+    }
+
+
+    user* getDebter()
+    {
+      return debter;
+    }
+
+    void setDebter(user* other)
+    {
+       debter = other;
+    }
+
     void setChanceFlag(bool flag)
     {
        chanceFlag = flag;

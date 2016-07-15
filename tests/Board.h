@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <queue>
 #include "Property.h"
 #include "color.h"
 #include "railroad.h"
@@ -15,6 +16,8 @@
 #define CHEST_CARDS 16
 #define CHANCE_CARDS 15
 
+using namespace std;
+
 class Board;
 
 class Space
@@ -22,11 +25,13 @@ class Space
    friend class Board;
 
    protected:
+      bool call_delete;
       string name;
       int dice;
+      
 
    public:
-      Space() {name = "Space";}
+      Space() {name = "Space"; call_delete = false;}
       virtual ~Space(){}
       virtual string getName() { return name; }
       virtual void action(user* current){}
@@ -114,6 +119,7 @@ class Space_Property : public Space
    public:
       Space_Property(Property* init);
       void action(user* current);
+      void setOwner(user* other) {owner = other;}
 };
 
 class Space_Luxury_Tax: public Space
@@ -176,6 +182,7 @@ class Board
 {
 private:
   vector<Space*> board;
+  map<Property*, Space*> prop_map;
   LinkedUser* players;
   property_database* DB;
   user* curr_player;
@@ -189,6 +196,10 @@ public:
 	void displayList();
   Space* getSpace_Name(string);
   Space* getSpace_Index(unsigned int);
+  void returnAllProperties();
+  void updateProp();
+  bool isBankrupt();
+  void start_game();
   void test_1();
   void test_2();
   void test_3();

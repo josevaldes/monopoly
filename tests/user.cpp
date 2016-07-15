@@ -7,11 +7,16 @@ using namespace std;
 
 user::user(string name, int startPt, bool cpu) :player(name), curr_pos(startPt), is_cpu(cpu)
 {
-	currency = 1500;
-	inDebt = false;
+	currency   = 1500;
+	inDebt     = false;
 	is_in_jail = false;
 	chanceCard = false;
-	chestCard = false;
+	chestCard  = false;
+	debter     = nullptr; 
+	debt       = 0;
+	chanceFlag = false;
+	recentlyFlag = false;
+	bankrupt   = false;
 }
 
 user::user()
