@@ -1192,9 +1192,9 @@ void Board::start_game()
 
       if(!curr_player->isJailed())
       {
-         dice_1 = (rand() % 6) + 1;
-         dice_2 = (rand() % 6) + 1;
-	 /*
+         //dice_1 = (rand() % 6) + 1;
+         //dice_2 = (rand() % 6) + 1;
+	 
 	 string ans;
 	 cout << "Getting dice 1\n";
 	 getline(cin, ans);
@@ -1202,7 +1202,7 @@ void Board::start_game()
 	 cout << "Getting dice 2\n";
 	 getline(cin, ans);
 	 dice_2 = strToInt(ans);
-         */
+         
 	 int move   = dice_1 + dice_2;
          dice_throwed = true;
 
@@ -1254,7 +1254,7 @@ void Board::start_game()
 	 }
       }
 
-      if((curr_player->isJailed() || dice_throwed) && (dice_1 != dice_2))
+      if((curr_player->isJailed() && (dice_throwed && dice_1 != dice_2))
       {
          players->nextCurrent();
 	 curr_player = players->getCurrent()->getUser();

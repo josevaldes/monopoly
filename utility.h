@@ -13,6 +13,7 @@ class utility: public Property
 {
 private:
 	int factor;
+  int dice;
 
 public:
 	explicit utility(string n) : Property(n)
@@ -74,9 +75,15 @@ public:
 		mortaged = change;
 	}
 */
-	int getRent() 
+	void setDice(int d)
+  {
+     dice = d;
+  }
+
+  int getRent() 
 	{
-		int dice;
+	/*	
+    int dice;
 		bool error = false;
 		do{
 			if (error)
@@ -101,8 +108,14 @@ public:
 			error = (dice < 1 || dice > 12);
 
 		} while (error);
-
-		rent = dice * factor;
+*/
+		int fact = factor;
+    if(chanceFlag)
+    {
+       fact = 10;
+       chanceFlag = false;
+    }
+    rent = dice * fact;
 		return rent;
 	}
 

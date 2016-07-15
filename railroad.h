@@ -37,12 +37,20 @@ class railroad: public Property
 		}
 
 		~railroad(){}
-/*
-		int getRent() const
-		{
-			return rent;
-		}
 
+		int getRent()
+		{
+			if(chanceFlag)
+      {
+        setChanceFlag(false);
+        return 2 * rent;
+      }
+      else
+      {
+         return rent;
+      }
+		}
+/*
 		int getCost() const
 		{
 			return cost;

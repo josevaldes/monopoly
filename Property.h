@@ -11,16 +11,20 @@ class Property
    protected:
    bool owned;
    bool mortaged;
+   bool chanceFlag;
    int cost;
    int rent;
    int mortage;
    string category;
    string name;
+   string owner;
 
    public:
       explicit Property(string n)
       {
          name = n;
+         owner = "";
+         chanceFlag = false;
       }
 
       Property()
@@ -30,11 +34,26 @@ class Property
 
       virtual ~Property() {}
       
+      void setChanceFlag(bool flag)
+      {
+         chanceFlag = flag;
+      }
+
       virtual bool isOwned() const 
       {
          return owned;
       }
       
+      virtual string getOwner() const
+      {
+         return owner;
+      }
+
+      virtual void setOwner(string new_owner)
+      {
+         owner = new_owner;
+      }
+
       virtual bool isMortaged() const
       {
          return mortaged;
@@ -45,7 +64,7 @@ class Property
          return cost;
       }
 
-      virtual int getRent() const
+      virtual int getRent()
       {
          return rent;
       }
